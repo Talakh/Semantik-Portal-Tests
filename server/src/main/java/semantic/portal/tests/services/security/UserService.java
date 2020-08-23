@@ -13,8 +13,6 @@ public interface UserService {
 
     User findByUsername(String username);
 
-    void create(User user);
-
     User findByEmail(String email);
 
     User findById(UUID id);

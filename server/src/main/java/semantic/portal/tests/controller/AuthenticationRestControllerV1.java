@@ -64,7 +64,6 @@ public class AuthenticationRestControllerV1 {
 
     @PostMapping(value = "create")
     public ResponseEntity getUserById(@RequestBody UserDto userDto) {
-        System.out.println("userDto " + userDto);
         User user = userService.findByEmail(userDto.getEmail());
 
         if (user != null) {
@@ -73,7 +72,7 @@ public class AuthenticationRestControllerV1 {
                     .body("User with email " + userDto.getEmail() + " already exist");
         }
 
-        userService.create(userDto.toUser());
+        userService.register(userDto.toUser());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

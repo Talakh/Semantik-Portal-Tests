@@ -12,6 +12,7 @@ import semantic.portal.tests.repository.UserRepository;
 import semantic.portal.tests.services.security.UserService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,11 +34,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user) {
         Role roleUser = roleRepository.findByName("ROLE_USER");
-        List<Role> userRoles = new ArrayList<>();
-        userRoles.add(roleUser);
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(userRoles);
+        user.setRoles(Collections.singletonList(roleUser));
         user.setStatus(Status.ACTIVE);
 
         User registeredUser = userRepository.save(user);
@@ -53,11 +51,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public void create(User user) {
-        userRepository.save(user);
     }
 
     public User findByEmail(String username) {

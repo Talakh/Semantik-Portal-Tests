@@ -2,6 +2,7 @@ package semantic.portal.tests.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import semantic.portal.tests.dto.security.AuthenticationRequestDto;
 import semantic.portal.tests.model.User;
+import semantic.portal.tests.model.UserDto;
 import semantic.portal.tests.security.jwt.JwtTokenProvider;
 import semantic.portal.tests.services.security.UserService;
 
@@ -58,5 +60,20 @@ public class AuthenticationRestControllerV1 {
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
         }
+    }
+
+    @PostMapping(value = "create")
+    public ResponseEntity getUserById(@RequestBody UserDto userDto) {
+        System.out.println("userDto " + userDto);
+        User user = userService.findByEmail(userDto.getEmail());
+
+        if (user != null) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("User with email " + userDto.getEmail() + " already exist");
+        }
+
+        userService.create(userDto.toUser());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

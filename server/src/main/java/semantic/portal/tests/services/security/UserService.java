@@ -3,6 +3,7 @@ package semantic.portal.tests.services.security;
 import semantic.portal.tests.model.User;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
 
@@ -12,7 +13,12 @@ public interface UserService {
 
     User findByUsername(String username);
 
-    User findById(Long id);
+    void create(User user);
 
-    void delete(Long id);
+    User findByEmail(String email);
+
+    User findById(UUID id);
+
+    void delete(UUID id);
+
 }

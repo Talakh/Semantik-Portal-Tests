@@ -13,6 +13,7 @@ import semantic.portal.tests.services.security.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -55,12 +56,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long id) {
+    public void create(User user) {
+        userRepository.save(user);
+    }
+
+    public User findByEmail(String username) {
+        return userRepository.findByEmail(username);
+    }
+
+    @Override
+    public User findById(UUID id) {
         return userRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         userRepository.deleteById(id);
     }
 }

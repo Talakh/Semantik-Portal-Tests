@@ -11,6 +11,8 @@ import semantic.portal.tests.model.AdminUserDto;
 import semantic.portal.tests.model.User;
 import semantic.portal.tests.services.security.UserService;
 
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/")
@@ -24,7 +26,7 @@ public class AdminRestControllerV1 {
     }
 
     @GetMapping(value = "users/{id}")
-    public ResponseEntity<AdminUserDto> getUserById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<AdminUserDto> getUserById(@PathVariable(name = "id") UUID id) {
         User user = userService.findById(id);
 
         if (user == null) {

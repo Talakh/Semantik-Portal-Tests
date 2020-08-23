@@ -3,13 +3,12 @@ package semantic.portal.tests.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import semantic.portal.tests.model.User;
 import semantic.portal.tests.model.UserDto;
 import semantic.portal.tests.services.security.UserService;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/v1/users/")
@@ -22,10 +21,10 @@ public class UserRestControllerV1 {
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Long id){
+    public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") UUID id) {
         User user = userService.findById(id);
 
-        if(user == null){
+        if (user == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
@@ -33,4 +32,7 @@ public class UserRestControllerV1 {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
+
 }

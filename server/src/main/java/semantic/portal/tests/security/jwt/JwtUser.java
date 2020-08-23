@@ -6,10 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.UUID;
 
 public class JwtUser implements UserDetails {
 
-    private final Long id;
+    private final UUID id;
     private final String username;
     private final String firstName;
     private final String lastName;
@@ -20,7 +21,7 @@ public class JwtUser implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
 
     public JwtUser(
-            Long id,
+            UUID id,
             String username,
             String firstName,
             String lastName,
@@ -41,7 +42,7 @@ public class JwtUser implements UserDetails {
     }
 
     @JsonIgnore
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

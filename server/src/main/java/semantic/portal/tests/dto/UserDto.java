@@ -1,8 +1,9 @@
-package semantic.portal.tests.model;
+package semantic.portal.tests.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import semantic.portal.tests.model.User;
 
 import java.util.UUID;
 

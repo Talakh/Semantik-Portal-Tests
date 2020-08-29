@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import semantic.portal.tests.dto.security.AuthenticationRequestDto;
 import semantic.portal.tests.model.User;
-import semantic.portal.tests.model.UserDto;
+import semantic.portal.tests.dto.UserDto;
 import semantic.portal.tests.security.jwt.JwtTokenProvider;
 import semantic.portal.tests.services.security.UserService;
 
@@ -24,7 +24,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1/auth/")
-public class AuthenticationRestControllerV1 {
+public class AuthenticationRestController {
 
     private final AuthenticationManager authenticationManager;
 
@@ -33,7 +33,7 @@ public class AuthenticationRestControllerV1 {
     private final UserService userService;
 
     @Autowired
-    public AuthenticationRestControllerV1(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public AuthenticationRestController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;

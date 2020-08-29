@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import semantic.portal.tests.model.AdminUserDto;
+import semantic.portal.tests.dto.AdminUserDto;
 import semantic.portal.tests.model.User;
 import semantic.portal.tests.services.security.UserService;
 
@@ -16,12 +16,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/")
-public class AdminRestControllerV1 {
+public class AdminRestController {
 
     private final UserService userService;
 
     @Autowired
-    public AdminRestControllerV1(UserService userService) {
+    public AdminRestController(UserService userService) {
         this.userService = userService;
     }
 

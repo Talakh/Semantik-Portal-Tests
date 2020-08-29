@@ -5,10 +5,11 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import semantic.portal.tests.dto.ConceptDto;
-import semantic.portal.tests.dto.RelationsDto;
+import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.services.api.ConceptApiService;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -35,7 +36,7 @@ public class ConceptApiServiceImpl implements ConceptApiService {
     }
 
     @Override
-    public List<ConceptDto> getConceptsByIds(List<Integer> ids) {
+    public List<ConceptDto> getConceptsByIds(Set<Integer> ids) {
         String idsParameter = ids.stream().map(String::valueOf).collect(Collectors.joining(","));
 
         return webClient
@@ -52,14 +53,14 @@ public class ConceptApiServiceImpl implements ConceptApiService {
     }
 
     @Override
-    public List<RelationsDto> getThesis(int id) {
+    public List<ThesisDTO> getThesis(int id) {
         return webClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/concept/{id}/thesis")
                         .build(id))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<RelationsDto>>() {
+                .bodyToMono(new ParameterizedTypeReference<List<ThesisDTO>>() {
                 })
                 .doOnSuccess(thesis -> log.info("getThesis: id: {}, thesis: {}", id, thesis))
                 .doOnError(e -> log.error("getThesis: id: {}, error: {}", id, e.getMessage()))
@@ -67,14 +68,14 @@ public class ConceptApiServiceImpl implements ConceptApiService {
     }
 
     @Override
-    public List<RelationsDto> getRelations(int id) {
+    public List<ThesisDTO> getRelations(int id) {
         return webClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/concept/{id}/relations")
                         .build(id))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<RelationsDto>>() {
+                .bodyToMono(new ParameterizedTypeReference<List<ThesisDTO>>() {
                 })
                 .doOnSuccess(relations -> log.info("getRelations: id: {}, relations: {}", id, relations))
                 .doOnError(e -> log.error("getRelations: id: {}, error: {}", id, e.getMessage()))

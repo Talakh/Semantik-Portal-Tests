@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class RelationsDto {
+public class ThesisDTO {
     private int id;
     @JsonProperty("concept_id")
     private int conceptId;
     private String view;
     //todo type
-    private Object thesis;
+    private String thesis;
     private String clazz;
     private int rating;
     //todo type

@@ -17,10 +17,6 @@ class ConceptApiServiceImplTest {
         conceptApiService.getConceptById(2177);
     }
 
-    @Test
-    public void getConceptsByIds() {
-        conceptApiService.getConceptsByIds(Arrays.asList(2177, 2175));
-    }
 
     @Test
     public void getThesis() {

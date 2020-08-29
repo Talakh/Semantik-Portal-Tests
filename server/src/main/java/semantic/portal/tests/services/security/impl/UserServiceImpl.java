@@ -11,7 +11,6 @@ import semantic.portal.tests.repository.RoleRepository;
 import semantic.portal.tests.repository.UserRepository;
 import semantic.portal.tests.services.security.UserService;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;

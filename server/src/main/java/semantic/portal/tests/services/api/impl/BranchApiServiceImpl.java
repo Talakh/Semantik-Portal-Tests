@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import semantic.portal.tests.dto.BranchDto;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.DidacticDto;
-import semantic.portal.tests.dto.RelationsDto;
+import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.services.api.BranchApiService;
 
 import java.util.List;
@@ -37,14 +37,14 @@ public class BranchApiServiceImpl implements BranchApiService {
     }
 
     @Override
-    public List<RelationsDto> getTheses(String branch) {
+    public List<ThesisDTO> getTheses(String branch) {
         return webClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/branch/{branch}/theses")
                         .build(branch))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<RelationsDto>>() {
+                .bodyToMono(new ParameterizedTypeReference<List<ThesisDTO>>() {
                 })
                 .doOnSuccess(theses -> log.info("getTheses: branch: {}, theses: {}", branch, theses))
                 .doOnError(e -> log.error("getTheses: branch: {}, error: {}", branch, e.getMessage()))
@@ -67,14 +67,14 @@ public class BranchApiServiceImpl implements BranchApiService {
     }
 
     @Override
-    public List<RelationsDto> getRelations(String branch) {
+    public List<ThesisDTO> getRelations(String branch) {
         return webClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/branch/{id}/concepts/relations")
                         .build(branch))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<RelationsDto>>() {
+                .bodyToMono(new ParameterizedTypeReference<List<ThesisDTO>>() {
                 })
                 .doOnSuccess(relations -> log.info("getRelations: branch: {}, relations: {}", branch, relations))
                 .doOnError(e -> log.error("getRelations: branch: {}, error: {}", branch, e.getMessage()))

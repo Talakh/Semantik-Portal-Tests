@@ -5,18 +5,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import semantic.portal.tests.model.User;
-import semantic.portal.tests.model.UserDto;
+import semantic.portal.tests.dto.UserDto;
 import semantic.portal.tests.services.security.UserService;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/v1/users/")
-public class UserRestControllerV1 {
+public class UserRestController {
     private final UserService userService;
 
     @Autowired
-    public UserRestControllerV1(UserService userService) {
+    public UserRestController(UserService userService) {
         this.userService = userService;
     }
 
@@ -29,7 +29,6 @@ public class UserRestControllerV1 {
         }
 
         UserDto result = UserDto.fromUser(user);
-
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

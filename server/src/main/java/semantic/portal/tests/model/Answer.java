@@ -19,10 +19,18 @@ public class Answer {
     @Column
     @Id
     @GeneratedValue()
-    UUID id;
+    private UUID id;
+
     @Column(length = 4096)
-    String answer;
+    private String answer;
 
     @Column
-    Boolean isCorrect;
+    private Boolean isCorrect;
+
+    public static Answer createAnswer(String answer, Boolean isCorrect) {
+        return Answer.builder()
+                .answer(answer)
+                .isCorrect(isCorrect)
+                .build();
+    }
 }

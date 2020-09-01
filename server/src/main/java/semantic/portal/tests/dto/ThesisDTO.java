@@ -11,6 +11,7 @@ public class ThesisDTO {
     private String view;
     //todo type
     private String thesis;
+    @JsonProperty("class")
     private String clazz;
     private int rating;
     //todo type

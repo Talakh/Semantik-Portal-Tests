@@ -9,7 +9,7 @@ import semantic.portal.tests.services.api.BranchApiService;
 class BranchApiServiceImplTest {
     @Autowired
     private BranchApiService branchApiService;
-    private String BRANCH = "angular";
+    private String BRANCH = "java";
 
     @Test
     public void getAll() {

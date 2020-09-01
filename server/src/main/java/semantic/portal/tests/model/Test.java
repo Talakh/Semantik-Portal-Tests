@@ -18,15 +18,15 @@ public class Test {
 
     @Id
     @GeneratedValue()
-    UUID id;
+    private UUID id;
 
     @Column
-    String question;
+    private String question;
 
     @Column
-    String branch;
+    private String branch;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "test_id")
-    List<Answer> answers;
+    private List<Answer> answers;
 }

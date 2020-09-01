@@ -25,7 +25,6 @@ public class ThesesApiServiceImpl implements ThesesApiService {
                 .uri("/thesis")
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ThesisDTO>>() {})
-                .doOnSuccess(theses -> log.info("getAll: thesis: {}", theses))
                 .doOnError(e -> log.error("getAll: error: {}", e.getMessage()))
                 .block();
     }

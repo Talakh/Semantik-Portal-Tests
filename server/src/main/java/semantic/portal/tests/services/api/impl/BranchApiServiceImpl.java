@@ -31,7 +31,6 @@ public class BranchApiServiceImpl implements BranchApiService {
                         .build(branch))
                 .retrieve()
                 .bodyToMono(BranchDto.class)
-                .doOnSuccess(dto -> log.info("getAll: branch: {}, dto: {}", branch, dto))
                 .doOnError(e -> log.error("getAll: branch: {}, error: {}", branch, e.getMessage()))
                 .block();
     }
@@ -46,7 +45,6 @@ public class BranchApiServiceImpl implements BranchApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ThesisDTO>>() {
                 })
-                .doOnSuccess(theses -> log.info("getTheses: branch: {}, theses: {}", branch, theses))
                 .doOnError(e -> log.error("getTheses: branch: {}, error: {}", branch, e.getMessage()))
                 .block();
     }
@@ -61,7 +59,6 @@ public class BranchApiServiceImpl implements BranchApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ConceptDto>>() {
                 })
-                .doOnSuccess(concepts -> log.info("getConcepts: branch: {}, concepts: {}", branch, concepts))
                 .doOnError(e -> log.error("getConcepts: branch: {}, error: {}", branch, e.getMessage()))
                 .block();
     }
@@ -76,7 +73,6 @@ public class BranchApiServiceImpl implements BranchApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ThesisDTO>>() {
                 })
-                .doOnSuccess(relations -> log.info("getRelations: branch: {}, relations: {}", branch, relations))
                 .doOnError(e -> log.error("getRelations: branch: {}, error: {}", branch, e.getMessage()))
                 .block();
     }
@@ -91,7 +87,6 @@ public class BranchApiServiceImpl implements BranchApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<DidacticDto>>() {
                 })
-                .doOnSuccess(didactic -> log.info("getDidactic: branch: {}, didactic: {}", branch, didactic))
                 .doOnError(e -> log.error("getDidactic: branch: {}, error: {}", branch, e.getMessage()))
                 .block();
     }

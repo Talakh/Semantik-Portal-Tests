@@ -30,7 +30,6 @@ public class ConceptApiServiceImpl implements ConceptApiService {
                         .build(id))
                 .retrieve()
                 .bodyToMono(ConceptDto.class)
-                .doOnSuccess(dto -> log.info("getConceptById: id: {}, dto: {}", id, dto))
                 .doOnError(e -> log.error("getConceptById: id: {}, error: {}", id, e.getMessage()))
                 .block();
     }
@@ -47,7 +46,6 @@ public class ConceptApiServiceImpl implements ConceptApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ConceptDto>>() {
                 })
-                .doOnSuccess(concepts -> log.info("getConceptByIds: ids: {}, concepts: {}", ids, concepts))
                 .doOnError(e -> log.error("getConceptByIds: ids: {}, error: {}", ids, e.getMessage()))
                 .block();
     }
@@ -62,7 +60,6 @@ public class ConceptApiServiceImpl implements ConceptApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ThesisDTO>>() {
                 })
-                .doOnSuccess(thesis -> log.info("getThesis: id: {}, thesis: {}", id, thesis))
                 .doOnError(e -> log.error("getThesis: id: {}, error: {}", id, e.getMessage()))
                 .block();
     }
@@ -77,7 +74,6 @@ public class ConceptApiServiceImpl implements ConceptApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ThesisDTO>>() {
                 })
-                .doOnSuccess(relations -> log.info("getRelations: id: {}, relations: {}", id, relations))
                 .doOnError(e -> log.error("getRelations: id: {}, error: {}", id, e.getMessage()))
                 .block();
     }
@@ -92,7 +88,6 @@ public class ConceptApiServiceImpl implements ConceptApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ConceptDto>>() {
                 })
-                .doOnSuccess(concepts -> log.info("getConceptsDidacticBefore: id: {}, concepts: {}", id, concepts))
                 .doOnError(e -> log.error("getConceptsDidacticBefore: id: {}, error: {}", id,e.getMessage()))
                 .block();
     }
@@ -107,7 +102,6 @@ public class ConceptApiServiceImpl implements ConceptApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ConceptDto>>() {
                 })
-                .doOnSuccess(concepts -> log.info("getConceptsDidacticAfter: id: {}, concepts: {}", id, concepts))
                 .doOnError(e -> log.error("getConceptsDidacticAfter: id: {}, error: {}", id, e.getMessage()))
                 .block();
     }

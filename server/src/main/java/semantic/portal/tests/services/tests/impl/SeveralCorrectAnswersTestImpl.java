@@ -9,7 +9,6 @@ import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.tests.SPTest;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
@@ -31,7 +30,7 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
 
         return Test.builder()
                 .question(question.getConcept())
-                .answers(getAnswers(question, conceptsWithSeveralAnswers, possibleDomainsForTest))
+                .answers(getAnswers(question, conceptsWithSeveralAnswers, possibleDomainsForTest, theses))
                 .build();
     }
 
@@ -84,13 +83,14 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
 
     private List<Answer> getAnswers(ConceptDto question,
                                     Map<Integer, List<ThesisDTO>> conceptsWithSeveralAnswers,
-                                    Map<String, List<ConceptDto>> possibleDomainsForTest) {
+                                    Map<String, List<ConceptDto>> possibleDomainsForTest,
+                                    List<ThesisDTO> theses) {
         List<Answer> answers = new ArrayList<>();
         conceptsWithSeveralAnswers.get(question.getId())
                 .forEach(thesis -> answers.add(Answer.createAnswer(thesis.getThesis(), Boolean.TRUE)));
 
 
-        answers.addAll(generateWrongAnswers(question, conceptsWithSeveralAnswers, possibleDomainsForTest, ANSWERS_COUNT - answers.size()));
+        answers.addAll(generateWrongAnswers(question, conceptsWithSeveralAnswers, possibleDomainsForTest, theses, ANSWERS_COUNT - answers.size()));
         Collections.shuffle(answers);
         return answers;
     }
@@ -98,6 +98,7 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
     private List<Answer> generateWrongAnswers(ConceptDto question,
                                               Map<Integer, List<ThesisDTO>> conceptsWithSeveralAnswers,
                                               Map<String, List<ConceptDto>> possibleDomainsForTest,
+                                              List<ThesisDTO> theses,
                                               int count) {
         List<Answer> answers = possibleDomainsForTest.get(question.getDomain()).stream()
                 .map(ConceptDto::getId)
@@ -108,9 +109,18 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
                 .map(answer -> Answer.createAnswer(answer, Boolean.FALSE))
                 .collect(toList());
 
-        Collections.shuffle(answers);
-
-        return answers.subList(0, count);
+        if (answers.size() < count) {
+            theses.stream()
+                    .filter(t -> t.getConceptId() != question.getId())
+                    .map(t -> Answer.createAnswer(t.getThesis(), Boolean.FALSE))
+                    .limit(count - answers.size())
+                    .forEach(answers::add);
+            Collections.shuffle(answers);
+        } else {
+            Collections.shuffle(answers);
+            answers = answers.subList(0, count);
+        }
+        return answers;
     }
 
     private String getConceptThesis(int conceptId, List<ThesisDTO> theses) {

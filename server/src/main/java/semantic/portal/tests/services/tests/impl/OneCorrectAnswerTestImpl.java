@@ -1,6 +1,7 @@
 package semantic.portal.tests.services.tests.impl;
 
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 
+@Slf4j
 @Service
 public class OneCorrectAnswerTestImpl implements SPTest {
     private static final int ANSWERS_COUNT = 4;
@@ -21,7 +23,7 @@ public class OneCorrectAnswerTestImpl implements SPTest {
 
     @Override
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
-        Map<String, List<ConceptDto>> possibleDomainsForTest = filterPossibleDomains(concepts);
+        Map<String, List<ConceptDto>> possibleDomainsForTest = filterPossibleDomains(concepts, theses);
         String domainForTest = getDomainForTest(possibleDomainsForTest);
         List<ConceptDto> domainConceptsForTest = possibleDomainsForTest.get(domainForTest);
 
@@ -32,9 +34,14 @@ public class OneCorrectAnswerTestImpl implements SPTest {
                 .answers(getAnswers(question, theses, domainConceptsForTest))
                 .build();
     }
+    private Map<String, List<ConceptDto>> filterPossibleDomains(List<ConceptDto> concepts, List<ThesisDTO> theses) {
+        List<Integer> possibleConcepts =  theses.stream()
+                .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
+                .map(ThesisDTO::getConceptId)
+                .collect(Collectors.toList());
 
-    private Map<String, List<ConceptDto>> filterPossibleDomains(List<ConceptDto> concepts) {
         return concepts.stream()
+                .filter(conceptDto -> possibleConcepts.contains(conceptDto.getId()))
                 .collect(Collectors.groupingBy(ConceptDto::getDomain))
                 .entrySet().stream()
                 .filter(entry -> entry.getValue().size() >= ANSWERS_COUNT)

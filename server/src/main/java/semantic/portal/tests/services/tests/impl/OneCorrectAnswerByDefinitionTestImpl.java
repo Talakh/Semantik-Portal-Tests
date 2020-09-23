@@ -13,6 +13,7 @@ import semantic.portal.tests.services.tests.SPTest;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static semantic.portal.tests.enums.TestTypeEnum.ONE_CORRECT_ANSWER;
 import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 
 @Service
@@ -39,6 +40,7 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
         return Test.builder()
                 .question(thesisDTO.getThesis())
                 .answers(createAnswers(concepts, thesisDTO))
+                .type(ONE_CORRECT_ANSWER)
                 .build();
     }
 

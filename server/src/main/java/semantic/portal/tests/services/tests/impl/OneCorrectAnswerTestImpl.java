@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
+import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.tests.SPTest;
@@ -32,6 +33,7 @@ public class OneCorrectAnswerTestImpl implements SPTest {
         return Test.builder()
                 .question(question.getConcept())
                 .answers(getAnswers(question, theses, domainConceptsForTest))
+                .type(TestTypeEnum.ONE_CORRECT_ANSWER)
                 .build();
     }
     private Map<String, List<ConceptDto>> filterPossibleDomains(List<ConceptDto> concepts, List<ThesisDTO> theses) {

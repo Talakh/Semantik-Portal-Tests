@@ -31,10 +31,10 @@ public class TestGeneratorImpl implements TestGenerator {
     @Override
     public List<Test> generate(List<ConceptDto> concepts, List<ThesisDTO> theses, DifficultLevelEnum difficult) {
         List<Test> tests = new ArrayList<>();
-        for(int i = 0; i < 300; i++) {
+        for(int i = 0; i < 3; i++) {
             tests.add(oneCorrectAnswerTest.create(concepts, theses));
         }
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 3; i++) {
             tests.add(severalCorrectAnswersTest.create(concepts, theses));
         }
         return tests;

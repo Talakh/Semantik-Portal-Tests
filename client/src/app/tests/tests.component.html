@@ -1,0 +1,32 @@
+<div *ngIf="tests.length == 0">
+  <div>
+    <label>Branch</label>
+    <input class="form-control" name="branch" type="text" [(ngModel)]="branch">
+  </div>
+  <div>
+    <label>Difficult Level</label>
+    <input class="form-control" name="difficultLevel" type="text" [(ngModel)]="difficultLevel">
+  </div>
+  <button (click)="createTests()">Create</button>
+</div>
+<div *ngIf="tests.length > 0">
+  <div>
+    <div *ngIf="currentTest.type == testTypes.ONE_CORRECT_ANSWER">
+      <p>{{currentTest.question}}</p>
+      <ul>
+        <li *ngFor="let answer of currentTest.answers">
+          <p (click)="nextTest(currentTest, answer)">{{answer.answer}}</p>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="currentTest.type == testTypes.SEVERAL_CORRECT_ANSWER">
+      <p>{{currentTest.question}}</p>
+      <ul>
+        <li *ngFor="let answer of currentTest.answers">
+          <p (click)="addOrRemoveAnswer(answer)">{{answer.answer}}</p>
+        </li>
+      </ul>
+      <button (click)="nextTest()">Next</button>
+    </div>
+  </div>
+</div>

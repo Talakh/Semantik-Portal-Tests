@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import semantic.portal.tests.enums.TestTypeEnum;
 
 import javax.persistence.*;
 import java.util.List;
@@ -25,6 +26,9 @@ public class Test {
 
     @Column
     private String branch;
+
+    @Column
+    private TestTypeEnum type;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "test_id")

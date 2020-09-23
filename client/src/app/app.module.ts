@@ -3,25 +3,27 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {OneCorrectAnswerTestComponent} from './one-correct-answer-test/one-correct-answer-test.component';
 import {TokenService} from "./service/token.service";
-import {OneCorrectAnswerTestService} from "./service/one-correct-answer-test.service";
 import {HttpClientModule} from "@angular/common/http";
+import {TestsComponent} from './tests/tests.component';
+import {FormsModule} from "@angular/forms";
+import {TestsService} from "./service/tests.service";
 
 @NgModule({
   declarations: [
     AppComponent,
-    OneCorrectAnswerTestComponent
+    TestsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
 
   ],
   providers: [
     TokenService,
-    OneCorrectAnswerTestService],
+    TestsService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

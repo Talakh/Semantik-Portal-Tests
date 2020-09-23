@@ -46,7 +46,7 @@ export class TokenService<T> {
     return this.http.get<T>(url, {headers: headers, params: params});
   }
 
-  post(url: string, entity: T): Observable<T> {
+  post(url: string, entity: any): Observable<T> {
     let token = localStorage.getItem('currentUser');
     console.log('get(url), token TokenService: ' + token);
     let headers: HttpHeaders = new HttpHeaders({
@@ -57,7 +57,18 @@ export class TokenService<T> {
     return this.http.post<T>(url, entity, {headers: headers});
   }
 
-  put(url: string, entity: any): Observable<T> {
+  postTest(url: string, entity: T): Observable<T> {
+    let token = localStorage.getItem('currentUser');
+    console.log('get(url), token TokenService: ' + token);
+    let headers: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    console.log('get(), httpOptions: ' + JSON.stringify(headers));
+    return this.http.post<T>(url, entity, {headers: headers});
+  }
+
+  put(url: string, entity: any): Observable<any> {
     let token = localStorage.getItem('currentUser');
     console.log('get(url), token TokenService: ' + token);
     let headers: HttpHeaders = new HttpHeaders({
@@ -65,7 +76,7 @@ export class TokenService<T> {
       'Authorization': `Bearer ${token}`
     });
     console.log('put(), httpOptions: ' + headers);
-    return this.http.put<T>(url, entity, {headers: headers});
+    return this.http.put<any>(url, entity, {headers: headers});
   }
 
   putMany(url: string, entity: any[]): Observable<T[]> {

@@ -17,7 +17,6 @@ class ConceptApiServiceImplTest {
         conceptApiService.getConceptById(2177);
     }
 
-
     @Test
     public void getThesis() {
         conceptApiService.getThesis(2177);

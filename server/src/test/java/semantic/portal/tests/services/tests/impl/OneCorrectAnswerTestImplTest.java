@@ -19,7 +19,7 @@ public class OneCorrectAnswerTestImplTest {
     @Test
     public void createTest(){
         semantic.portal.tests.model.Test test = oneCorrectAnswerTest.create(
-                branchApiService.getConcepts("angular"), branchApiService.getTheses("angular"));
+                branchApiService.getConcepts("flutter"), branchApiService.getTheses("flutter"));
         System.out.println("Q - " + test.getQuestion());
         System.out.println("A - " + test.getAnswers().stream().map(Answer::getAnswer).collect(Collectors.joining("\n")));
     }

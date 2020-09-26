@@ -16,23 +16,29 @@ import java.util.List;
 @Slf4j
 @Service
 public class TestGeneratorImpl implements TestGenerator {
-    private final SPTest severalCorrectAnswersTest;
     private final SPTest oneCorrectAnswerTest;
+    private final SPTest oneCorrectAnswerByDefinition;
+    private final SPTest severalCorrectAnswersTest;
     private final SPTest matchTest;
 
     public TestGeneratorImpl(@Qualifier("severalCorrectAnswersTestImpl") SPTest severalCorrectAnswersTest,
                              @Qualifier("oneCorrectAnswerTestImpl") SPTest oneCorrectAnswerTest,
+                             @Qualifier("oneCorrectAnswerByDefinitionTestImpl") SPTest oneCorrectAnswerByDefinition,
                              @Qualifier("matchTestImpl") SPTest matchTest) {
         this.severalCorrectAnswersTest = severalCorrectAnswersTest;
         this.oneCorrectAnswerTest = oneCorrectAnswerTest;
+        this.oneCorrectAnswerByDefinition = oneCorrectAnswerByDefinition;
         this.matchTest = matchTest;
     }
 
     @Override
     public List<Test> generate(List<ConceptDto> concepts, List<ThesisDTO> theses, DifficultLevelEnum difficult) {
         List<Test> tests = new ArrayList<>();
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             tests.add(oneCorrectAnswerTest.create(concepts, theses));
+        }
+        for (int i = 0; i < 3; i++) {
+            tests.add(oneCorrectAnswerByDefinition.create(concepts, theses));
         }
         for (int i = 0; i < 3; i++) {
             tests.add(severalCorrectAnswersTest.create(concepts, theses));

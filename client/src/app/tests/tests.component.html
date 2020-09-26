@@ -1,32 +1,52 @@
-<div *ngIf="tests.length == 0">
-  <div>
-    <label>Branch</label>
-    <input class="form-control" name="branch" type="text" [(ngModel)]="branch">
+<div *ngIf="tests.length == 0" class="container" style="padding-top: 10%;">
+  <div class="row">
+    <select [(ngModel)]="branch" id="branch" class="custom-select custom-select-lg mb-3">
+      <option selected hidden>Select the subject</option>
+      <option value="css">CSS</option>
+      <option value="html">HTML</option>
+      <option value="laravel">Laravel</option>
+      <option value="flutter">Flutter</option>
+      <option value="django">Django</option>
+      <option value="python">Python</option>
+      <option value="js">JavaScript</option>
+      <option value="angular">Angular</option>
+      <option value="scala">Scala</option>
+      <option value="java">Java</option>
+    </select>
   </div>
-  <div>
-    <label>Difficult Level</label>
-    <input class="form-control" name="difficultLevel" type="text" [(ngModel)]="difficultLevel">
+  <div class="row">
+    <select [(ngModel)]="difficultLevel" id="difficultLevel" class="custom-select custom-select-sm">
+      <option selected hidden>Select the difficult level</option>
+      <option value="LOW">Low</option>
+      <option value="MEDIUM">Medium</option>
+      <option value="HIGH">High</option>
+    </select>
   </div>
-  <button (click)="createTests()">Create</button>
+  <div class="col text-center" style="padding-top: 10px;">
+    <button class="btn btn-primary" (click)="createTests()">Create</button>
+  </div>
 </div>
-<div *ngIf="tests.length > 0">
-  <div>
+<div *ngIf="tests.length > 0" class="container">
+  <div style="padding-top:10px">
     <div *ngIf="currentTest.type == testTypes.ONE_CORRECT_ANSWER">
       <p>{{currentTest.question}}</p>
-      <ul>
-        <li *ngFor="let answer of currentTest.answers">
-          <p (click)="nextTest(currentTest, answer)">{{answer.answer}}</p>
-        </li>
-      </ul>
+      <div *ngFor="let one of currentTest.answers" class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="{{one.answer}}" name="defaultExampleRadios">
+        <label class="custom-control-label" for="{{one.answer}}">{{one.answer}}</label>
+      </div>
+      <div class="col text-center">
+        <button class="btn btn-primary" (click)="nextTest()">Next</button>
+      </div>
     </div>
     <div *ngIf="currentTest.type == testTypes.SEVERAL_CORRECT_ANSWER">
       <p>{{currentTest.question}}</p>
-      <ul>
-        <li *ngFor="let answer of currentTest.answers">
-          <p (click)="addOrRemoveAnswer(answer)">{{answer.answer}}</p>
-        </li>
-      </ul>
-      <button (click)="nextTest()">Next</button>
+      <div *ngFor="let several of currentTest.answers" class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="{{several.answer}}">
+        <label class="custom-control-label" for="{{several.answer}}">{{several.answer}}</label>
+      </div>
+      <div class="col text-center">
+        <button class="btn btn-primary" (click)="nextTest()">Next</button>
+      </div>
     </div>
   </div>
 </div>

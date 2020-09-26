@@ -16,8 +16,8 @@ enum TestTypeEnum {
   styleUrls: ['./tests.component.css']
 })
 export class TestsComponent implements OnInit {
-  branch: string;
-  difficultLevel: string;
+  branch: string = "Select the subject";
+  difficultLevel: string = "Select the difficult level";
   tests: Test[] = [];
   currentTestIndex: number;
   currentTest: Test;
@@ -30,6 +30,7 @@ export class TestsComponent implements OnInit {
   }
 
   createTests(){
+    console.log("branch " + this.branch + " level " + this.difficultLevel);
     this.testsService.create(this.branch, this.difficultLevel)
       .pipe(finalize(() => {
         this.currentTestIndex = 0;
@@ -48,5 +49,9 @@ export class TestsComponent implements OnInit {
 
   addOrRemoveAnswer(answer: Answer) {
 
+  }
+
+  changeBranch(branch: string) {
+    this.branch = branch;
   }
 }

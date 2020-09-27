@@ -6,7 +6,6 @@ import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Test;
-import semantic.portal.tests.services.api.BranchApiService;
 import semantic.portal.tests.services.api.ConceptApiService;
 import semantic.portal.tests.services.tests.SPTest;
 
@@ -22,21 +21,18 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
     private static final int ANSWERS_COUNT = 4;
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
 
-    private final BranchApiService branchApiService;
     private final ConceptApiService conceptApiService;
     private static final Random random = new Random();
 
-    public OneCorrectAnswerByDefinitionTestImpl(BranchApiService branchApiService, ConceptApiService conceptApiService) {
-        this.branchApiService = branchApiService;
+    public OneCorrectAnswerByDefinitionTestImpl(ConceptApiService conceptApiService) {
         this.conceptApiService = conceptApiService;
     }
 
     @Override
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
-        Map<String, List<ConceptDto>> possibleDomainsForTest = filterPossibleDomains(concepts);
-        String domainForTest = getDomainForTest(possibleDomainsForTest);
-        List<ConceptDto> domainConceptsForTest = possibleDomainsForTest.get(domainForTest);
-        ThesisDTO thesisDTO = getRandomTheseByConcept(domainConceptsForTest, theses);
+        List<ThesisDTO> thesisDTOS = getRandomTheseByConcept(concepts, theses);
+        System.out.println("thesisDTOS " + thesisDTOS );
+        ThesisDTO thesisDTO = getRandomThesis(thesisDTOS);
         return Test.builder()
                 .question(thesisDTO.getThesis())
                 .answers(createAnswers(concepts, thesisDTO))
@@ -44,15 +40,22 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
                 .build();
     }
 
-    private ThesisDTO getRandomTheseByConcept(List<ConceptDto> concepts, List<ThesisDTO> thesisDTOS) {
+    private List<ThesisDTO> getRandomTheseByConcept(List<ConceptDto> concepts, List<ThesisDTO> thesisDTOS) {
+        Map<String, List<ConceptDto>> possibleDomainsForTest = filterPossibleDomains(concepts);
+        String domainForTest = getDomainForTest(possibleDomainsForTest);
+        List<ConceptDto> domainConceptsForTest = possibleDomainsForTest.get(domainForTest);
         List<ThesisDTO> thesisDto = new ArrayList<>();
-        for (ConceptDto conceptDto : concepts) {
+        for (ConceptDto conceptDto : domainConceptsForTest) {
             thesisDTOS.stream()
                     .filter(thesisDTO -> thesesTypesForAnswer.contains(thesisDTO.getClazz()))
                     .filter(thesisDTO -> conceptDto.getId() == thesisDTO.getConceptId())
                     .forEach(thesisDto::add);
         }
-        return getRandomThesis(thesisDto);
+        if (!thesisDto.isEmpty()) {
+            return thesisDto;
+        } else {
+            return getRandomTheseByConcept(concepts, thesisDTOS);
+        }
     }
 
     private ThesisDTO getRandomThesis(List<ThesisDTO> thesisDTOS) {
@@ -66,9 +69,12 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
         List<Answer> answers = new ArrayList<>();
         Answer rightAnswer = Answer.createAnswer(rightConceptDto.getConcept(), true);
         answers.add(rightAnswer);
-        filterPossibleDomains(concepts).get(rightConceptDto.getDomain()).stream()
+        List<ConceptDto> conceptDtos =  filterPossibleDomains(concepts).get(rightConceptDto.getDomain());
+        Collections.shuffle(conceptDtos);
+       conceptDtos.stream()
                 .map(conceptDto -> Answer.createAnswer(conceptDto.getConcept(), false))
                 .filter(answer -> !Objects.equals(rightAnswer.getAnswer(), answer.getAnswer()))
+                .limit(4)
                 .forEach(answers::add);
         Collections.shuffle(answers);
         return answers;

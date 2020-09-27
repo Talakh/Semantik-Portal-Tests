@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TestsService} from "../service/tests.service";
 import {finalize} from "rxjs/operators";
 import {Test} from "../model/test.model";
@@ -22,14 +22,17 @@ export class TestsComponent implements OnInit {
   currentTestIndex: number;
   currentTest: Test;
   testTypes = TestTypeEnum;
-  severalCorrectAnswers: Answer[];
+  needCheck: boolean = true;
+  answerId: string;
+  answerIds: string[] = [];
 
-  constructor(private testsService: TestsService) { }
+  constructor(private testsService: TestsService) {
+  }
 
   ngOnInit(): void {
   }
 
-  createTests(){
+  createTests() {
     console.log("branch " + this.branch + " level " + this.difficultLevel);
     this.testsService.create(this.branch, this.difficultLevel)
       .pipe(finalize(() => {
@@ -37,21 +40,44 @@ export class TestsComponent implements OnInit {
         this.currentTest = this.tests[this.currentTestIndex];
       }))
       .subscribe((res: Test[]) => {
-      console.log("TEST: " + res);
-      this.tests = res;
-    }).add();
+        this.tests = res;
+      }).add();
   }
 
-  nextTest(test: Test, answer: Answer) {
-    this.testsService.answer(test, answer);
+  nextTest() {
     this.currentTest = this.tests[++this.currentTestIndex];
+    this.needCheck = true;
   }
 
-  addOrRemoveAnswer(answer: Answer) {
+  checkOneAnswer(testId: string) {
+    this.testsService.checkAnswer({"testId": testId, "answerId": this.answerId})
+      .subscribe((res) => console.log(res));
+    this.needCheck = false;
+  }
 
+  changeAnswer(answerId: string) {
+    this.answerId = answerId;
   }
 
   changeBranch(branch: string) {
     this.branch = branch;
+  }
+
+  addOrRemoveAnswer(answerId: string) {
+    if (this.answerIds.includes(answerId)){
+      const index = this.answerIds.indexOf(answerId);
+      if (index > -1) {
+        this.answerIds.splice(index, 1);
+      }
+    } else {
+      this.answerIds.push(answerId);
+    }
+  }
+
+  checkSeveralAnswer(testId: string) {
+    console.log("Test: " + testId + " answers: " + this.answerIds);
+    this.testsService.checkAnswer({"testId": testId, "answerIds": this.answerIds})
+      .subscribe((res) => console.log(res));
+    this.needCheck = false;
   }
 }

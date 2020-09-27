@@ -25,12 +25,12 @@ public class Answer {
     private String answer;
 
     @Column
-    private Boolean isCorrect;
+    private boolean correct;
 
     public static Answer createAnswer(String answer, Boolean isCorrect) {
         return Answer.builder()
                 .answer(answer)
-                .isCorrect(isCorrect)
+                .correct(isCorrect)
                 .build();
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.model.Answer;
+import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.api.ConceptApiService;
 import semantic.portal.tests.services.tests.SPTest;
@@ -31,10 +32,9 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
     @Override
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
         List<ThesisDTO> thesisDTOS = getRandomTheseByConcept(concepts, theses);
-        System.out.println("thesisDTOS " + thesisDTOS );
         ThesisDTO thesisDTO = getRandomThesis(thesisDTOS);
         return Test.builder()
-                .question(thesisDTO.getThesis())
+                .question(Collections.singletonList(Question.builder().question(thesisDTO.getThesis()).build()))
                 .answers(createAnswers(concepts, thesisDTO))
                 .type(ONE_CORRECT_ANSWER)
                 .build();

@@ -15,7 +15,7 @@ public class OneCorrectAnswerByDefinitionTestImplTest {
     @Autowired
     private BranchApiServiceImpl branchApiService;
 
-    @Test()
+    @RepeatedTest(100)
     public void createTest() {
         System.out.println(oneCorrectAnswerByDefinitionTest.create(
                 branchApiService.getConcepts("laravel"), branchApiService.getTheses("laravel")));

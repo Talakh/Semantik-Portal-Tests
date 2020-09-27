@@ -7,6 +7,7 @@ import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
+import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.tests.SPTest;
 
@@ -31,7 +32,7 @@ public class OneCorrectAnswerTestImpl implements SPTest {
         ConceptDto question = getRandomConcept(domainConceptsForTest);
 
         return Test.builder()
-                .question(question.getConcept())
+                .question(Collections.singletonList(Question.builder().question(question.getConcept()).build()))
                 .answers(getAnswers(question, theses, domainConceptsForTest))
                 .type(TestTypeEnum.ONE_CORRECT_ANSWER)
                 .build();

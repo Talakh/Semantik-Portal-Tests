@@ -43,6 +43,9 @@ public class TestGeneratorImpl implements TestGenerator {
         for (int i = 0; i < 3; i++) {
             tests.add(severalCorrectAnswersTest.create(concepts, theses));
         }
+        for (int i = 0; i < 3; i++) {
+            tests.add(matchTest.create(concepts, theses));
+        }
         return tests;
     }
 }

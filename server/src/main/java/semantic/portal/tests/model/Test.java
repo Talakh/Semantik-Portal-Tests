@@ -22,7 +22,8 @@ public class Test {
     private UUID id;
 
     @Column
-    private String question;
+    @ElementCollection(targetClass=String.class)
+    private List<Question> question;
 
     @Column
     private String branch;

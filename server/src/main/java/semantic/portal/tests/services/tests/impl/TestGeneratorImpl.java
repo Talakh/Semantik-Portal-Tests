@@ -34,16 +34,16 @@ public class TestGeneratorImpl implements TestGenerator {
     @Override
     public List<Test> generate(List<ConceptDto> concepts, List<ThesisDTO> theses, DifficultLevelEnum difficult) {
         List<Test> tests = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < difficult.getOneCorrectAnswerCount(); i++) {
             tests.add(oneCorrectAnswerTest.create(concepts, theses));
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < difficult.getOneCorrectAnswerByDefinitionCount(); i++) {
             tests.add(oneCorrectAnswerByDefinition.create(concepts, theses));
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < difficult.getSeveralCorrectAnswerCount(); i++) {
             tests.add(severalCorrectAnswersTest.create(concepts, theses));
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < difficult.getMatchCount(); i++) {
             tests.add(matchTest.create(concepts, theses));
         }
         return tests;

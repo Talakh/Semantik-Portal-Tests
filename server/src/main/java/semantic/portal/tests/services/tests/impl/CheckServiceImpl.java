@@ -35,7 +35,7 @@ public class CheckServiceImpl implements CheckService {
             case SEVERAL_CORRECT_ANSWER:
                 return checkSeveralCorrectAnswer(test, answer.getAnswerIds());
             case MATCH:
-                return checkMatchTest(test, answer.getAnswerIds());
+//                return checkMatchTest(test, answer.getAnswerIds());
         }
         throw new EntityNotFoundException("Test with type " + test.getType()  + " doesn't exist");
     }
@@ -63,20 +63,19 @@ public class CheckServiceImpl implements CheckService {
     }
 
 
-    private AnswerCheckDto checkMatchTest(Test test , List<UUID> answerIds)
-    {
-        List<UUID> correctAnswerIds = test.getQuestion().stream()
-                .map(Question::getAnswerId)
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEqualCollection(correctAnswerIds, answerIds)) {
-            return AnswerCheckDto.builder()
-                    .isTrue(Boolean.TRUE)
-                    .build();
-        } else {
-            return AnswerCheckDto.builder()
-                    .isTrue(Boolean.FALSE)
-                    .correctIds(correctAnswerIds)
-                    .build();
-        }
-    }
+//    private AnswerCheckDto checkMatchTest(Test test , List<UUID> answerIds) {
+//        List<UUID> correctAnswerIds = test.getQuestion().stream()
+//                .map(Question::getAnswerId)
+//                .collect(Collectors.toList());
+//        if (CollectionUtils.isEqualCollection(correctAnswerIds, answerIds)) {
+//            return AnswerCheckDto.builder()
+//                    .isTrue(Boolean.TRUE)
+//                    .build();
+//        } else {
+//            return AnswerCheckDto.builder()
+//                    .isTrue(Boolean.FALSE)
+//                    .correctIds(correctAnswerIds)
+//                    .build();
+//        }
+//    }
 }

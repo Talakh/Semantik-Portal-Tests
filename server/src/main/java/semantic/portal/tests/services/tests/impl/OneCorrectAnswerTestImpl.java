@@ -7,7 +7,6 @@ import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
-import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.tests.SPTest;
 
@@ -20,6 +19,7 @@ import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 @Service
 public class OneCorrectAnswerTestImpl implements SPTest {
     private static final int ANSWERS_COUNT = 4;
+    private static final String questionTemplate = "What statement is the most applicable to the concept \"%s\"?";
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
     private static final Random random = new Random();
 
@@ -32,7 +32,7 @@ public class OneCorrectAnswerTestImpl implements SPTest {
         ConceptDto question = getRandomConcept(domainConceptsForTest);
 
         return Test.builder()
-                .question(Collections.singletonList(Question.builder().question(question.getConcept()).build()))
+                .question(String.format(questionTemplate, question.getConcept()))
                 .answers(getAnswers(question, theses, domainConceptsForTest))
                 .type(TestTypeEnum.ONE_CORRECT_ANSWER)
                 .build();

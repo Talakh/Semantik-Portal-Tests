@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.model.Answer;
-import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.api.ConceptApiService;
 import semantic.portal.tests.services.tests.SPTest;
@@ -18,7 +17,7 @@ import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 
 @Service
 public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
-
+    private static final String questionTemplate = "The purpose of which concept describes the statement \"%s\"?";
     private static final int ANSWERS_COUNT = 4;
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
 
@@ -34,7 +33,7 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
         List<ThesisDTO> thesisDTOS = getRandomTheseByConcept(concepts, theses);
         ThesisDTO thesisDTO = getRandomThesis(thesisDTOS);
         return Test.builder()
-                .question(Collections.singletonList(Question.builder().question(thesisDTO.getThesis()).build()))
+                .question(String.format(questionTemplate, thesisDTO.getThesis()))
                 .answers(createAnswers(concepts, thesisDTO))
                 .type(ONE_CORRECT_ANSWER)
                 .build();

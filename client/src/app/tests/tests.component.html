@@ -29,7 +29,7 @@
 <div *ngIf="tests.length > 0" class="container">
   <div style="padding-top:10px">
     <div *ngIf="currentTest.type == testTypes.ONE_CORRECT_ANSWER">
-      <p>{{currentTest.question}}</p>
+      <p>{{currentTestIndex + 1}}. {{currentTest.question}}</p>
       <div *ngFor="let one of currentTest.answers" class="custom-control custom-radio">
         <input type="radio"
                class="custom-control-input"
@@ -45,12 +45,9 @@
       <div class="col text-center" *ngIf="needCheck">
         <button class="btn btn-primary" (click)="checkOneAnswer(currentTest.id)">Check</button>
       </div>
-      <div class="col text-center" *ngIf="!needCheck">
-        <button class="btn btn-primary" (click)="nextTest()">Next</button>
-      </div>
     </div>
     <div *ngIf="currentTest.type == testTypes.SEVERAL_CORRECT_ANSWER">
-      <p>{{currentTest.question}}</p>
+      <p>{{currentTestIndex + 1}}. {{currentTest.question}}</p>
       <div *ngFor="let several of currentTest.answers" class="custom-control custom-checkbox">
         <input type="checkbox"
                (click)="addOrRemoveAnswer(several.id)"
@@ -65,9 +62,12 @@
       <div class="col text-center" *ngIf="needCheck">
         <button class="btn btn-primary" (click)="checkSeveralAnswer(currentTest.id)">Check</button>
       </div>
-      <div class="col text-center" *ngIf="!needCheck">
-        <button class="btn btn-primary" (click)="nextTest()">Next</button>
-      </div>
+    </div>
+    <div class="col text-center" *ngIf="!needCheck && currentTestIndex < tests.length - 1">
+      <button class="btn btn-primary" (click)="nextTest()">Next</button>
+    </div>
+    <div class="col text-center" *ngIf="!needCheck && currentTestIndex == tests.length - 1">
+      <button class="btn btn-primary" (click)="nextTest()">Finish</button>
     </div>
   </div>
 </div>

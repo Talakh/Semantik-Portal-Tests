@@ -51,7 +51,7 @@ public class MatchTestImpl implements SPTest {
         Collections.shuffle(answers);
         return Test.builder()
                 .answers(answers)
-                .question(questions)
+//                .question(questions)
                 .build();
     }
 

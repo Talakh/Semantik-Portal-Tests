@@ -6,7 +6,6 @@ import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
-import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.tests.SPTest;
 
@@ -17,6 +16,7 @@ import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 
 @Service
 public class SeveralCorrectAnswersTestImpl implements SPTest {
+    private static final String questionTemplate = "Chose the statement applicable to the concept \"%s\"?";
     private static final int ANSWERS_COUNT = 4;
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
     private static final Random random = new Random();
@@ -31,7 +31,7 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
         ConceptDto question = getRandomConcept(domainConceptsForTest);
 
         return Test.builder()
-                .question(Collections.singletonList(Question.builder().question(question.getConcept()).build()))
+                .question(String.format(questionTemplate, question.getConcept()))
                 .answers(getAnswers(question, conceptsWithSeveralAnswers, possibleDomainsForTest, theses))
                 .type(TestTypeEnum.SEVERAL_CORRECT_ANSWER)
                 .build();
@@ -43,28 +43,6 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
                 .collect(groupingBy(ThesisDTO::getConceptId))
                 .entrySet().stream()
                 .filter(e -> !e.getValue().isEmpty() && e.getValue().size() <= ANSWERS_COUNT)
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    private Object filterPossible(List<ConceptDto> concepts,
-                                  Set<String> possibleDomains,
-                                  List<ThesisDTO> theses) {
-
-        Map<Integer, List<ThesisDTO>> availableThesisForConcept = theses.stream()
-                .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
-                .collect(groupingBy(ThesisDTO::getConceptId));
-
-        return concepts.stream()
-                .filter(concept -> possibleDomains.contains(concept.getDomain()))
-                .collect(groupingBy(ConceptDto::getDomain, mapping(ConceptDto::getId, toList())))
-                .entrySet().stream()
-                .collect(toMap(Map.Entry::getKey, e -> e
-                        .getValue().stream()
-                        .map(availableThesisForConcept::get)
-                        .flatMap(Collection::stream)
-                        .collect(toList())))
-                .entrySet().stream()
-                .filter(e -> e.getValue().size() >= ANSWERS_COUNT)
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -124,14 +102,5 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
             answers = answers.subList(0, count);
         }
         return answers;
-    }
-
-    private String getConceptThesis(int conceptId, List<ThesisDTO> theses) {
-        return theses.stream()
-                .filter(thesis -> thesis.getConceptId() == conceptId)
-                .filter(thesis -> thesesTypesForAnswer.contains(thesis.getClazz()))
-                .map(ThesisDTO::getThesis)
-                .findAny()
-                .orElseThrow(NullPointerException::new);
     }
 }

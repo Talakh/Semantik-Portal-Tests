@@ -41,7 +41,7 @@ public class TestManagerImpl implements TestManager {
     public List<Test> create(String branchName, DifficultLevelEnum difficult) {
         List<ConceptDto> concepts = branchApiService.getConcepts(branchName);
         List<ThesisDTO> theses = branchApiService.getTheses(branchName);
-        // return testRepository.saveAll(tests);
-        return testGenerator.generate(concepts, theses, difficult);
+        List<Test> tests = testGenerator.generate(concepts, theses, difficult);
+        return testRepository.saveAll(tests);
     }
 }

@@ -83,7 +83,10 @@ export class TestsComponent implements OnInit {
 
   checkSeveralAnswer(testId: string) {
     this.testsService.checkAnswer({"testId": testId, "answerIds": this.answerIds})
-      .subscribe((res) => console.log(res));
+      .subscribe((res) => {
+        console.log(res);
+        this.correctAnswerIds = res.correctIds;
+      });
     this.needCheck = false;
   }
 }

@@ -56,7 +56,11 @@
                (click)="addOrRemoveAnswer(several.id)"
                class="custom-control-input"
                id="{{several.answer}}">
-        <label class="custom-control-label" for="{{several.answer}}">{{several.answer}}</label>
+        <label [ngStyle]="{'color':
+               (!needCheck && correctAnswerIds.includes(several.id)) ? 'green' :
+               (!needCheck && !correctAnswerIds.includes(several.id) && answerIds.includes(several.id)) ? 'red' : 'black'}"
+               class="custom-control-label"
+               for="{{several.answer}}">{{several.answer}}</label>
       </div>
       <div class="col text-center" *ngIf="needCheck">
         <button class="btn btn-primary" (click)="checkSeveralAnswer(currentTest.id)">Check</button>

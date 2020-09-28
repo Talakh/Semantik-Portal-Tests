@@ -31,9 +31,16 @@
     <div *ngIf="currentTest.type == testTypes.ONE_CORRECT_ANSWER">
       <p>{{currentTest.question}}</p>
       <div *ngFor="let one of currentTest.answers" class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" id="{{one.id}}" name="defaultExampleRadios"
-        (click)="changeAnswer(one.id);">
-        <label class="custom-control-label" for="{{one.id}}">{{one.answer}}</label>
+        <input type="radio"
+               class="custom-control-input"
+               id="{{one.id}}"
+               name="defaultExampleRadios"
+               (click)="changeAnswer(one.id);">
+        <label [ngStyle]="{'color':
+               (!needCheck && one.id == correctAnswerId) ? 'green' :
+               (!needCheck && !isCorrect && one.id == answerId) ? 'red' : 'black'}"
+               class="custom-control-label"
+               for="{{one.id}}">{{one.answer}}</label>
       </div>
       <div class="col text-center" *ngIf="needCheck">
         <button class="btn btn-primary" (click)="checkOneAnswer(currentTest.id)">Check</button>

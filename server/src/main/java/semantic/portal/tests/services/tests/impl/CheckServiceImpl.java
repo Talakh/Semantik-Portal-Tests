@@ -34,7 +34,8 @@ public class CheckServiceImpl implements CheckService {
             case SEVERAL_CORRECT_ANSWER:
                 return checkSeveralCorrectAnswer(test, answer.getAnswerIds());
             case MATCH:
-            default: throw new UnknownTestTypeException();
+            default:
+                throw new UnknownTestTypeException();
         }
     }
 
@@ -43,16 +44,10 @@ public class CheckServiceImpl implements CheckService {
                 .filter(Answer::isCorrect)
                 .findFirst()
                 .orElseThrow(AnswerNotFoundException::new);
-        if (correctAnswer.getId().equals(answerId)) {
-            return AnswerCheckDto.builder()
-                    .isTrue(Boolean.TRUE)
-                    .build();
-        } else {
-            return AnswerCheckDto.builder()
-                    .isTrue(Boolean.FALSE)
-                    .correctId(correctAnswer.getId())
-                    .build();
-        }
+        return AnswerCheckDto.builder()
+                .correctId(correctAnswer.getId())
+                .isTrue(correctAnswer.getId().equals(answerId))
+                .build();
     }
 
     private AnswerCheckDto checkSeveralCorrectAnswer(Test test, List<UUID> answerIds) {
@@ -60,15 +55,9 @@ public class CheckServiceImpl implements CheckService {
                 .filter(Answer::isCorrect)
                 .map(Answer::getId)
                 .collect(Collectors.toList());
-        if (CollectionUtils.isEqualCollection(correctAnswerIds, answerIds)) {
-            return AnswerCheckDto.builder()
-                    .isTrue(Boolean.TRUE)
-                    .build();
-        } else {
-            return AnswerCheckDto.builder()
-                    .isTrue(Boolean.FALSE)
-                    .correctIds(correctAnswerIds)
-                    .build();
-        }
+        return AnswerCheckDto.builder()
+                .correctIds(correctAnswerIds)
+                .isTrue(CollectionUtils.isEqualCollection(correctAnswerIds, answerIds))
+                .build();
     }
 }

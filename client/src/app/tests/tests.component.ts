@@ -25,6 +25,9 @@ export class TestsComponent implements OnInit {
   needCheck: boolean = true;
   answerId: string;
   answerIds: string[] = [];
+  isCorrect: boolean;
+  correctAnswerId: string;
+  correctAnswerIds: string[];
 
   constructor(private testsService: TestsService) {
   }
@@ -51,7 +54,11 @@ export class TestsComponent implements OnInit {
 
   checkOneAnswer(testId: string) {
     this.testsService.checkAnswer({"testId": testId, "answerId": this.answerId})
-      .subscribe((res) => console.log(res));
+      .subscribe((res) => {
+        console.log(res);
+        this.isCorrect = res.isTrue;
+        this.correctAnswerId = res.correctId;
+      });
     this.needCheck = false;
   }
 
@@ -64,7 +71,7 @@ export class TestsComponent implements OnInit {
   }
 
   addOrRemoveAnswer(answerId: string) {
-    if (this.answerIds.includes(answerId)){
+    if (this.answerIds.includes(answerId)) {
       const index = this.answerIds.indexOf(answerId);
       if (index > -1) {
         this.answerIds.splice(index, 1);
@@ -75,7 +82,6 @@ export class TestsComponent implements OnInit {
   }
 
   checkSeveralAnswer(testId: string) {
-    console.log("Test: " + testId + " answers: " + this.answerIds);
     this.testsService.checkAnswer({"testId": testId, "answerIds": this.answerIds})
       .subscribe((res) => console.log(res));
     this.needCheck = false;

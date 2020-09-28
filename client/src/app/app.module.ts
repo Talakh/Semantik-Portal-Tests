@@ -8,6 +8,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {TestsComponent} from './tests/tests.component';
 import {FormsModule} from "@angular/forms";
 import {TestsService} from "./service/tests.service";
+import {AttemptService} from "./service/attempt.service";
 
 @NgModule({
   declarations: [
@@ -19,11 +20,11 @@ import {TestsService} from "./service/tests.service";
     AppRoutingModule,
     HttpClientModule,
     FormsModule
-
   ],
   providers: [
     TokenService,
-    TestsService],
+    TestsService,
+    AttemptService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

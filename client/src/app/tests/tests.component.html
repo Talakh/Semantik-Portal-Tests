@@ -1,4 +1,4 @@
-<div *ngIf="tests.length == 0" class="container" style="padding-top: 10%;">
+<div *ngIf="attempt == null" class="container" style="padding-top: 10%;">
   <div class="row">
     <select [(ngModel)]="branch" id="branch" class="custom-select custom-select-lg mb-3">
       <option selected hidden>Select the subject</option>
@@ -26,7 +26,7 @@
     <button class="btn btn-primary" (click)="createTests()">Create</button>
   </div>
 </div>
-<div *ngIf="tests.length > 0" class="container">
+<div *ngIf="attempt != null && attempt.tests.length > 0" class="container">
   <div style="padding-top:10px">
     <div *ngIf="currentTest.type == testTypes.ONE_CORRECT_ANSWER">
       <p>{{currentTestIndex + 1}}. {{currentTest.question}}</p>
@@ -63,10 +63,10 @@
         <button class="btn btn-primary" (click)="checkSeveralAnswer(currentTest.id)">Check</button>
       </div>
     </div>
-    <div class="col text-center" *ngIf="!needCheck && currentTestIndex < tests.length - 1">
+    <div class="col text-center" *ngIf="!needCheck && currentTestIndex < attempt.tests.length - 1">
       <button class="btn btn-primary" (click)="nextTest()">Next</button>
     </div>
-    <div class="col text-center" *ngIf="!needCheck && currentTestIndex == tests.length - 1">
+    <div class="col text-center" *ngIf="!needCheck && currentTestIndex == attempt.tests.length - 1">
       <button class="btn btn-primary" (click)="nextTest()">Finish</button>
     </div>
   </div>

@@ -3,6 +3,8 @@ import {TestsService} from "../service/tests.service";
 import {finalize} from "rxjs/operators";
 import {Test} from "../model/test.model";
 import {Answer} from "../model/answer.model";
+import {Attempt} from "../model/attempt.model";
+import {AttemptService} from "../service/attempt.service";
 
 enum TestTypeEnum {
   ONE_CORRECT_ANSWER = 'ONE_CORRECT_ANSWER',
@@ -18,7 +20,7 @@ enum TestTypeEnum {
 export class TestsComponent implements OnInit {
   branch: string = "Select the subject";
   difficultLevel: string = "Select the difficult level";
-  tests: Test[] = [];
+  attempt: Attempt;
   currentTestIndex: number;
   currentTest: Test;
   testTypes = TestTypeEnum;
@@ -29,7 +31,8 @@ export class TestsComponent implements OnInit {
   correctAnswerId: string;
   correctAnswerIds: string[];
 
-  constructor(private testsService: TestsService) {
+  constructor(private testsService: TestsService,
+              private attemptService: AttemptService) {
   }
 
   ngOnInit(): void {
@@ -37,18 +40,18 @@ export class TestsComponent implements OnInit {
 
   createTests() {
     console.log("branch " + this.branch + " level " + this.difficultLevel);
-    this.testsService.create(this.branch, this.difficultLevel)
+    this.attemptService.create(this.branch, this.difficultLevel)
       .pipe(finalize(() => {
         this.currentTestIndex = 0;
-        this.currentTest = this.tests[this.currentTestIndex];
+        this.currentTest = this.attempt.tests[this.currentTestIndex];
       }))
-      .subscribe((res: Test[]) => {
-        this.tests = res;
+      .subscribe((res: Attempt) => {
+        this.attempt = res;
       }).add();
   }
 
   nextTest() {
-    this.currentTest = this.tests[++this.currentTestIndex];
+    this.currentTest = this.attempt.tests[++this.currentTestIndex];
     this.needCheck = true;
   }
 

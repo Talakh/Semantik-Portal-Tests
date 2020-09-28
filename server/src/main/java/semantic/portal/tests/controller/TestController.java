@@ -17,19 +17,10 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping(value = "/api/v1/admin/test")
 public class TestController {
-    private final TestManager testManager;
     private final CheckService checkService;
 
-    public TestController(TestManager testManager, CheckService checkService) {
-        this.testManager = testManager;
+    public TestController(CheckService checkService) {
         this.checkService = checkService;
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<List<Test>> getTests(@RequestBody CreateTestRequest request) {
-        log.info("Create test request: {}", request);
-        List<Test> tests = testManager.create(request.getBranch(), request.getDifficultLevel());
-        return ResponseEntity.ok(tests);
     }
 
     @PutMapping("/check")

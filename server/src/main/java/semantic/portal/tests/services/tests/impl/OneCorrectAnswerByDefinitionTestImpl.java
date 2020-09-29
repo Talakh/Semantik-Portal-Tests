@@ -56,8 +56,17 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
             return getRandomTheseByConcept(concepts, thesisDTOS);
         }
     }
+// не фільтрувати по домену
+    // фільтрувати по
+// 1. toThesis id == null
+    // isAspect для концепта ==0 ?
+    // додати фільтрацію по класах
+    // якщо бранча пуста, то кидати ексепшн
 
-    private ThesisDTO getRandomThesis(List<ThesisDTO> thesisDTOS) {
+
+
+
+ private ThesisDTO getRandomThesis(List<ThesisDTO> thesisDTOS) {
         ThesisDTO thesis = thesisDTOS.get(random.nextInt(thesisDTOS.size()));
         thesisDTOS.remove(thesis);
         return thesis;

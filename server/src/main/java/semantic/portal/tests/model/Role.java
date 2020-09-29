@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class Role extends BaseEntity {
 
-    @Column
+    @Column(length = 4096)
     private String name;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)

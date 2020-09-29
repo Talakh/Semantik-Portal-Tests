@@ -16,13 +16,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Question {
 
-    @Column
     @Id
     @GeneratedValue()
+    @Column(length = 4096)
     private UUID id;
 
-    @Column(length = 4096)
+    @Column(length = 8000)
     String question;
 
+    @Column(length = 4096)
     private UUID answerId;
 }

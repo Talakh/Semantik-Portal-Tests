@@ -14,6 +14,7 @@ public class BaseEntity {
 
     @Id
     @GeneratedValue()
+    @Column(length = 4096)
     private UUID id;
 
     @CreatedDate

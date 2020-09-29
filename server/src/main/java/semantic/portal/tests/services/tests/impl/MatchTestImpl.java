@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
+import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
+import semantic.portal.tests.repository.AnswerRepository;
 import semantic.portal.tests.services.api.ConceptApiService;
 import semantic.portal.tests.services.tests.SPTest;
 
@@ -23,6 +25,8 @@ public class MatchTestImpl implements SPTest {
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
     private static final Random random = new Random();
     private final ConceptApiService conceptApiService;
+    @Autowired
+    AnswerRepository answerRepository;
 
     @Autowired
     public MatchTestImpl(ConceptApiService conceptApiService) {
@@ -39,19 +43,21 @@ public class MatchTestImpl implements SPTest {
         }
         for (ThesisDTO thesisDTO : thesisDTOS.values()) {
             ConceptDto rightConceptDto = conceptApiService.getConceptById(thesisDTO.getConceptId());
-            Answer rightAnswer = Answer.createAnswer(rightConceptDto.getConcept(), true);
-            rightAnswer.setId(UUID.randomUUID());
+            Answer rightAnswer = Answer.builder().answer(rightConceptDto.getConcept()).build();
+            rightAnswer.setMatchId(UUID.randomUUID());
             answers.add(rightAnswer);
             Question question = new Question();
-            question.setAnswerId(rightAnswer.getId());
+            question.setAnswerId(rightAnswer.getMatchId());
             question.setQuestion(thesisDTO.getThesis());
             questions.add(question);
         }
         Collections.shuffle(questions);
         Collections.shuffle(answers);
+
         return Test.builder()
+                .matchQuestion(questions)
                 .answers(answers)
-//                .question(questions)
+                .type(TestTypeEnum.MATCH)
                 .build();
     }
 

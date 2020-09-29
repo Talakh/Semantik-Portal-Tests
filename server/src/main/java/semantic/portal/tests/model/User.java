@@ -10,19 +10,19 @@ import java.util.List;
 @Data
 public class User extends BaseEntity {
 
-    @Column(name = "username")
+    @Column(name = "username", length = 4096)
     private String username;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 4096)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 4096)
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 4096)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 4096)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

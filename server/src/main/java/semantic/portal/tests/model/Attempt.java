@@ -16,11 +16,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Attempt {
+
     @Id
     @GeneratedValue
+    @Column(length = 4096)
     private UUID id;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "test_id")
+    @Column(length = 4096)
     private List<Test> tests;
 }

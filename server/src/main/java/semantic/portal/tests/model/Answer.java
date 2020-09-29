@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Answer {
 
-    @Column
+    @Column(length = 4096)
     @Id
     @GeneratedValue()
     private UUID id;
@@ -24,8 +24,12 @@ public class Answer {
     @Column(length = 4096)
     private String answer;
 
-    @Column
+    @Column(length = 4096)
     private boolean correct;
+
+    @Column(length = 4096)
+    private UUID matchId;
+
 
     public static Answer createAnswer(String answer, Boolean isCorrect) {
         return Answer.builder()

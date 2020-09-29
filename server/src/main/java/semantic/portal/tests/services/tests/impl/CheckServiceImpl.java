@@ -13,7 +13,10 @@ import semantic.portal.tests.repository.TestRepository;
 import semantic.portal.tests.services.tests.CheckService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -21,11 +24,13 @@ import java.util.stream.Collectors;
 public class CheckServiceImpl implements CheckService {
     private final TestRepository testRepository;
 
+
     public CheckServiceImpl(TestRepository testRepository) {
         this.testRepository = testRepository;
     }
 
     @Override
+    @Transactional
     public AnswerCheckDto check(AnswerDto answer) {
         Test test = testRepository.findById(UUID.fromString(answer.getTestId()))
                 .orElseThrow(TestNotFountException::new);
@@ -35,9 +40,9 @@ public class CheckServiceImpl implements CheckService {
             case SEVERAL_CORRECT_ANSWER:
                 return checkSeveralCorrectAnswer(test, answer.getAnswerIds());
             case MATCH:
-//                return checkMatchTest(test, answer.getAnswerIds());
+                return AnswerCheckDto.builder().correctAnswer(checkMatchTest(test, answer)).build();
         }
-        throw new EntityNotFoundException("Test with type " + test.getType()  + " doesn't exist");
+        throw new EntityNotFoundException("Test with type " + test.getType() + " doesn't exist");
     }
 
     private AnswerCheckDto checkOneCorrectAnswer(Test test, UUID answerId) {
@@ -51,6 +56,20 @@ public class CheckServiceImpl implements CheckService {
                 .build();
     }
 
+    private Map<UUID, Boolean> checkMatchTest(Test test, AnswerDto answerDto) {
+        Map<UUID, UUID> question2Answer = answerDto.getQuestion2Answer();
+        Map<UUID, Boolean> rightAnswer = new HashMap<>();
+        for (Question question : test.getMatchQuestion()) {
+            for (UUID questionUuid : question2Answer.keySet()) {
+                if (question.getId().equals(questionUuid)) {
+                    if (question.getAnswerId().equals(question2Answer.get(questionUuid)))
+                        rightAnswer.put(questionUuid, true);
+                }
+            }
+        }
+        return rightAnswer;
+    }
+
     private AnswerCheckDto checkSeveralCorrectAnswer(Test test, List<UUID> answerIds) {
         List<UUID> correctAnswerIds = test.getAnswers().stream()
                 .filter(Answer::isCorrect)
@@ -62,20 +81,4 @@ public class CheckServiceImpl implements CheckService {
                 .build();
     }
 
-
-//    private AnswerCheckDto checkMatchTest(Test test , List<UUID> answerIds) {
-//        List<UUID> correctAnswerIds = test.getQuestion().stream()
-//                .map(Question::getAnswerId)
-//                .collect(Collectors.toList());
-//        if (CollectionUtils.isEqualCollection(correctAnswerIds, answerIds)) {
-//            return AnswerCheckDto.builder()
-//                    .isTrue(Boolean.TRUE)
-//                    .build();
-//        } else {
-//            return AnswerCheckDto.builder()
-//                    .isTrue(Boolean.FALSE)
-//                    .correctIds(correctAnswerIds)
-//                    .build();
-//        }
-//    }
 }

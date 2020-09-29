@@ -19,18 +19,24 @@ public class Test {
 
     @Id
     @GeneratedValue()
+    @Column(length = 4096)
     private UUID id;
 
-    @Column
+    @Lob
     private String question;
 
-    @Column
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    private List<Question> matchQuestion;
+
+    @Column(length = 4096)
     private String branch;
 
-    @Column
+    @Column(length = 4096)
     private TestTypeEnum type;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "test_id")
+    @Column(length = 4096)
     private List<Answer> answers;
 }

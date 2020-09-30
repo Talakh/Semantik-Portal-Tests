@@ -14,65 +14,50 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
+import static semantic.portal.tests.utils.TestUtils.getRandomConcept;
 
 @Slf4j
 @Service
 public class OneCorrectAnswerTestImpl implements SPTest {
     private static final int ANSWERS_COUNT = 4;
-    private static final String questionTemplate = "What statement is the most applicable to the concept \"%s\"?";
+    private static final String QUESTION_TEMPLATE = "What statement is the most applicable to the concept \"%s\"?";
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
-    private static final Random random = new Random();
 
     @Override
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
-        Map<String, List<ConceptDto>> possibleDomainsForTest = filterPossibleDomains(concepts, theses);
-        String domainForTest = getDomainForTest(possibleDomainsForTest);
-        List<ConceptDto> domainConceptsForTest = possibleDomainsForTest.get(domainForTest);
-
-        ConceptDto question = getRandomConcept(domainConceptsForTest);
+        Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(concepts, theses);
+        ConceptDto question = getRandomConcept(possibleConceptsForTest);
 
         return Test.builder()
-                .question(String.format(questionTemplate, question.getConcept()))
-                .answers(getAnswers(question, theses, domainConceptsForTest))
+                .question(String.format(QUESTION_TEMPLATE, question.getConcept()))
+                .answers(getAnswers(question, theses, possibleConceptsForTest))
                 .type(TestTypeEnum.ONE_CORRECT_ANSWER)
                 .build();
     }
-    private Map<String, List<ConceptDto>> filterPossibleDomains(List<ConceptDto> concepts, List<ThesisDTO> theses) {
+    private Map<Integer, ConceptDto> filterPossibleConcepts(List<ConceptDto> concepts, List<ThesisDTO> theses) {
         List<Integer> possibleConcepts =  theses.stream()
                 .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
+                .filter(t -> Objects.isNull(t.getToThesisId()))
                 .map(ThesisDTO::getConceptId)
                 .collect(Collectors.toList());
 
-        return concepts.stream()
+        return  concepts.stream()
+                .filter(conceptDto -> conceptDto.getIsAspect() == 0)
                 .filter(conceptDto -> possibleConcepts.contains(conceptDto.getId()))
-                .collect(Collectors.groupingBy(ConceptDto::getDomain))
-                .entrySet().stream()
-                .filter(entry -> entry.getValue().size() >= ANSWERS_COUNT)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Collectors.toMap(ConceptDto::getId, c -> c));
     }
 
-    private String getDomainForTest(Map<String, List<ConceptDto>> domainsMap) {
-        return new ArrayList<>(domainsMap.keySet()).get(random.nextInt(domainsMap.size()));
-    }
-
-    private ConceptDto getRandomConcept(List<ConceptDto> concepts) {
-        ConceptDto concept = concepts.get(random.nextInt(concepts.size()));
-        concepts.remove(concept);
-        return concept;
-    }
-
-    private List<Answer> getAnswers(ConceptDto question, List<ThesisDTO> theses, List<ConceptDto> concepts) {
+    private List<Answer> getAnswers(ConceptDto question, List<ThesisDTO> theses, Map<Integer, ConceptDto> conceptMap) {
         List<Answer> answers = new ArrayList<>();
         answers.add(Answer.createAnswer(getConceptThesis(question.getId(), theses), Boolean.TRUE));
-        answers.addAll(generateWrongAnswers(concepts, theses));
+        answers.addAll(generateWrongAnswers(theses, conceptMap.keySet()));
         Collections.shuffle(answers);
         return answers;
     }
 
-    private List<Answer> generateWrongAnswers(List<ConceptDto> concepts, List<ThesisDTO> thesis) {
-        List<Integer> conceptsIds = concepts.stream().map(ConceptDto::getId).collect(Collectors.toList());
+    private List<Answer> generateWrongAnswers(List<ThesisDTO> thesis, Set<Integer> conceptIds) {
         List<Answer> answers = thesis.stream()
-                .filter(t -> conceptsIds.contains(t.getConceptId()))
+                .filter(t -> conceptIds.contains(t.getConceptId()))
                 .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
                 .map(ThesisDTO::getThesis)
                 .map(answer -> Answer.createAnswer(answer, Boolean.FALSE))

@@ -56,6 +56,8 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
             return getRandomTheseByConcept(concepts, thesisDTOS);
         }
     }
+
+    // TODO: 30.09.2020
 // не фільтрувати по домену
     // фільтрувати по
 // 1. toThesis id == null

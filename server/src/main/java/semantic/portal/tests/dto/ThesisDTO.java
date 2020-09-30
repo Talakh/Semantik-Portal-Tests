@@ -23,7 +23,7 @@ public class ThesisDTO {
     @JsonProperty("to_concept_id")
     private int toConceptId;
     @JsonProperty("to_thesis_id")
-    private int toThesisId;
+    private Integer toThesisId;
     @JsonProperty("to_thesis_caption")
     private String toThesisCaption;
 }

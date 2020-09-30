@@ -1,18 +1,10 @@
 <div *ngIf="attempt == null" class="container" style="padding-top: 10%;">
   <div class="row">
-    <select [(ngModel)]="branch" id="branch" class="custom-select custom-select-lg mb-3">
+    <select [(ngModel)]="branch"
+            id="branch"
+            class="custom-select custom-select-lg mb-3">
       <option selected hidden>Select the subject</option>
-      <option value="css">CSS</option>
-      <option value="html">HTML</option>
-      <option value="laravel">Laravel</option>
-      <option value="flutter">Flutter</option>
-      <option value="django">Django</option>
-      <option value="python">Python</option>
-      <option value="js">JavaScript</option>
-      <option value="angular">Angular</option>
-      <option value="scala">Scala</option>
-      <option value="java">Java</option>
-      <option value="dart">Dart</option>
+      <option *ngFor="let b of branches" value="{{b.view}}">{{b.caption}}</option>
     </select>
   </div>
   <div class="row">

@@ -1,9 +1,6 @@
 package semantic.portal.tests.services.api;
 
-import semantic.portal.tests.dto.BranchDto;
-import semantic.portal.tests.dto.ConceptDto;
-import semantic.portal.tests.dto.DidacticDto;
-import semantic.portal.tests.dto.ThesisDTO;
+import semantic.portal.tests.dto.*;
 
 import java.util.List;
 
@@ -17,4 +14,6 @@ public interface BranchApiService {
     List<ThesisDTO> getRelations(String branch);
 
     List<DidacticDto> getDidactic(String branch);
+
+    List<BranchChildDto> getRootChildren();
 }

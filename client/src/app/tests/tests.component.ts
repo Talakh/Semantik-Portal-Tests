@@ -5,6 +5,7 @@ import {Test} from "../model/test.model";
 import {Answer} from "../model/answer.model";
 import {Attempt} from "../model/attempt.model";
 import {AttemptService} from "../service/attempt.service";
+import {BranchChild} from "../model/branch-child.model";
 
 enum TestTypeEnum {
   ONE_CORRECT_ANSWER = 'ONE_CORRECT_ANSWER',
@@ -20,6 +21,7 @@ enum TestTypeEnum {
 export class TestsComponent implements OnInit {
   branch: string = "Select the subject";
   difficultLevel: string = "Select the difficult level";
+  branches: BranchChild[];
   attempt: Attempt;
   currentTestIndex: number;
   currentTest: Test;
@@ -36,6 +38,8 @@ export class TestsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.testsService.branches()
+      .subscribe((res) => this.branches = res);
   }
 
   createTests() {

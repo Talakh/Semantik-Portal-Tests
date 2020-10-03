@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import semantic.portal.tests.dto.BranchDto;
-import semantic.portal.tests.dto.ConceptDto;
-import semantic.portal.tests.dto.DidacticDto;
-import semantic.portal.tests.dto.ThesisDTO;
+import semantic.portal.tests.dto.*;
 import semantic.portal.tests.services.api.BranchApiService;
 
 import java.util.List;
@@ -88,6 +85,20 @@ public class BranchApiServiceImpl implements BranchApiService {
                 .bodyToMono(new ParameterizedTypeReference<List<DidacticDto>>() {
                 })
                 .doOnError(e -> log.error("getDidactic: branch: {}, error: {}", branch, e.getMessage()))
+                .block();
+    }
+
+    @Override
+    public List<BranchChildDto> getRootChildren() {
+        return webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/branch/branches/children")
+                        .build())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<BranchChildDto>>() {
+                })
+                .doOnError(e -> log.error("getRootChildren: error: {}", e.getMessage()))
                 .block();
     }
 }

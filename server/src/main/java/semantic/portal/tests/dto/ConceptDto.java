@@ -21,7 +21,7 @@ public class ConceptDto {
     //todo possible values
     private int getDefinitionCalled;
     //todo is boolean?
-    private int isAspect;
+    private Integer isAspect;
     //todo type
     private Object aspectOf;
     @JsonProperty("found_count")

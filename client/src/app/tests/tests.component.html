@@ -1,66 +1,70 @@
 <div *ngIf="attempt == null" class="container" style="padding-top: 10%;">
-  <div class="row">
-    <select [(ngModel)]="branch"
-            id="branch"
-            class="custom-select custom-select-lg mb-3">
-      <option selected hidden>Select the subject</option>
-      <option *ngFor="let b of branches" value="{{b.view}}">{{b.caption}}</option>
-    </select>
+  <div class="row justify-content-center">
+    <mat-form-field appearance="fill" class="col-md-3">
+      <mat-label>Select the subject</mat-label>
+      <mat-select [(ngModel)]="branch">
+        <mat-option *ngFor="let b of branches" [value]="b.view">{{b.caption}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="col-md-3 col-md-offset-5">
+      <mat-label>Select the difficult level</mat-label>
+      <mat-select [(ngModel)]="difficultLevel">
+        <mat-option value="LOW">Low</mat-option>
+        <mat-option value="MEDIUM">Medium</mat-option>
+        <mat-option value="HIGH">High</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
-  <div class="row">
-    <select [(ngModel)]="difficultLevel" id="difficultLevel" class="custom-select custom-select-sm">
-      <option selected hidden>Select the difficult level</option>
-      <option value="LOW">Low</option>
-      <option value="MEDIUM">Medium</option>
-      <option value="HIGH">High</option>
-    </select>
-  </div>
-  <div class="col text-center" style="padding-top: 10px;">
-    <button class="btn btn-primary" (click)="createTests()">Create</button>
+  <div style="padding-top: 10px;" class="row justify-content-center">
+    <button mat-raised-button (click)="createTests()">Create</button>
   </div>
 </div>
 <div *ngIf="attempt != null && attempt.tests.length > 0" class="container">
-  <div style="padding-top:10px">
+  <div style="padding-top:10px;">
+    <h2 class="row justify-content-center question">{{currentTestIndex + 1}}. {{currentTest.question}}</h2>
     <div *ngIf="currentTest.type == testTypes.ONE_CORRECT_ANSWER">
-      <p>{{currentTestIndex + 1}}. {{currentTest.question}}</p>
-      <div *ngFor="let one of currentTest.answers" class="custom-control custom-radio">
-        <input type="radio"
-               class="custom-control-input"
-               id="{{one.id}}"
-               name="defaultExampleRadios"
-               (click)="changeAnswer(one.id);">
-        <label [ngStyle]="{'color':
-               (!needCheck && one.id == correctAnswerId) ? 'green' :
-               (!needCheck && !isCorrect && one.id == answerId) ? 'red' : 'black'}"
-               class="custom-control-label"
-               for="{{one.id}}">{{one.answer}}</label>
-      </div>
+      <mat-radio-group class="row justify-content-center">
+        <mat-radio-button *ngFor="let one of currentTest.answers"
+                          name="defaultExampleRadios"
+                          style="display: block;"
+                          (click)="changeAnswer(one.id);"
+                          value="{{one.id}}">
+          <div class="answer"
+               [ngStyle]="{'background-color':
+               (needCheck && one.id == answerId) ? 'dodgerblue' :
+               (!needCheck && one.id == correctAnswerId) ? 'lightgreen' :
+               (!needCheck && !isCorrect && one.id == answerId) ? '#e6472c' : 'white'}">
+            {{normalizeAnswer(one.answer)}}
+          </div>
+        </mat-radio-button>
+      </mat-radio-group>
       <div class="col text-center" *ngIf="needCheck">
-        <button class="btn btn-primary" (click)="checkOneAnswer(currentTest.id)">Check</button>
+        <button mat-raised-button (click)="checkOneAnswer(currentTest.id)">Check</button>
       </div>
     </div>
     <div *ngIf="currentTest.type == testTypes.SEVERAL_CORRECT_ANSWER">
-      <p>{{currentTestIndex + 1}}. {{currentTest.question}}</p>
-      <div *ngFor="let several of currentTest.answers" class="custom-control custom-checkbox">
-        <input type="checkbox"
-               (click)="addOrRemoveAnswer(several.id)"
-               class="custom-control-input"
-               id="{{several.answer}}">
-        <label [ngStyle]="{'color':
-               (!needCheck && correctAnswerIds.includes(several.id)) ? 'green' :
-               (!needCheck && !correctAnswerIds.includes(several.id) && answerIds.includes(several.id)) ? 'red' : 'black'}"
-               class="custom-control-label"
-               for="{{several.answer}}">{{several.answer}}</label>
+      <div class="row justify-content-center" *ngFor="let several of currentTest.answers">
+        <mat-checkbox
+          (click)="addOrRemoveAnswer(several.id)"
+          value="{{several.id}}">
+          <div class="answer"
+            [ngStyle]="{'background-color':
+            (needCheck && answerIds.includes(several.id)) ? 'dodgerblue' :
+                         (!needCheck && correctAnswerIds.includes(several.id)) ? 'lightgreen' :
+                         (!needCheck && !correctAnswerIds.includes(several.id) && answerIds.includes(several.id)) ? '#e6472c' : 'white'}">
+            {{normalizeAnswer(several.answer)}}
+          </div>
+        </mat-checkbox>
       </div>
       <div class="col text-center" *ngIf="needCheck">
-        <button class="btn btn-primary" (click)="checkSeveralAnswer(currentTest.id)">Check</button>
+        <button mat-raised-button (click)="checkSeveralAnswer(currentTest.id)">Check</button>
       </div>
     </div>
-    <div class="col text-center" *ngIf="!needCheck && currentTestIndex < attempt.tests.length - 1">
-      <button class="btn btn-primary" (click)="nextTest()">Next</button>
-    </div>
-    <div class="col text-center" *ngIf="!needCheck && currentTestIndex == attempt.tests.length - 1">
-      <button class="btn btn-primary" (click)="nextTest()">Finish</button>
-    </div>
+  </div>
+  <div class="col text-center" *ngIf="!needCheck && currentTestIndex < attempt.tests.length - 1">
+    <button mat-raised-button (click)="nextTest()">Next</button>
+  </div>
+  <div class="col text-center" *ngIf="!needCheck && currentTestIndex == attempt.tests.length - 1">
+    <button mat-raised-button (click)="nextTest()">Finish</button>
   </div>
 </div>

@@ -1,0 +1,21 @@
+.question {
+  margin-bottom: 30px;
+}
+
+.answer {
+  border-radius: 5px;
+  padding: 5px;
+  white-space: pre;
+  width: 700px;
+  text-align: center;
+  opacity: inherit;
+  position: inherit;
+}
+
+.answer:hover {
+  background: rgba(0, 0, 255, 0.2);
+}
+
+.custom-control-input{
+
+}

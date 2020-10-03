@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {TestsService} from "../service/tests.service";
-import {finalize} from "rxjs/operators";
+import {finalize, map, startWith} from "rxjs/operators";
 import {Test} from "../model/test.model";
 import {Answer} from "../model/answer.model";
 import {Attempt} from "../model/attempt.model";
 import {AttemptService} from "../service/attempt.service";
 import {BranchChild} from "../model/branch-child.model";
+import {FormControl} from "@angular/forms";
+import {Observable} from "rxjs";
 
 enum TestTypeEnum {
   ONE_CORRECT_ANSWER = 'ONE_CORRECT_ANSWER',
@@ -95,5 +97,21 @@ export class TestsComponent implements OnInit {
         this.correctAnswerIds = res.correctIds;
       });
     this.needCheck = false;
+  }
+
+  normalizeAnswer(answer: string) : string {
+    var lines = [];
+    var line = "";
+    let arr = answer.split(" ");
+    arr.forEach(word => {
+      if (line.length + word.length < 100) {
+        line = line + " " + word
+      } else {
+        lines.push(line);
+        line = word;
+      }
+    })
+    if (line.length > 0) lines.push(line);
+    return lines.join("\n  ");
   }
 }

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import semantic.portal.tests.dto.security.AuthenticationRequestDto;
-import semantic.portal.tests.model.User;
 import semantic.portal.tests.dto.UserDto;
+import semantic.portal.tests.model.User;
 import semantic.portal.tests.security.jwt.JwtTokenProvider;
+import semantic.portal.tests.services.api.impl.LoginApiServiceImpl;
 import semantic.portal.tests.services.security.UserService;
 
 import java.util.HashMap;
@@ -32,47 +32,42 @@ public class AuthenticationRestController {
 
     private final UserService userService;
 
+    private final LoginApiServiceImpl loginApiService;
+
     @Autowired
-    public AuthenticationRestController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public AuthenticationRestController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService, LoginApiServiceImpl loginApiService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
+        this.loginApiService = loginApiService;
     }
 
     @PostMapping("login")
-    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
-        try {
-            String username = requestDto.getUsername();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-            User user = userService.findByUsername(username);
+    public ResponseEntity login(@RequestBody UserDto userDto) {
 
-            if (user == null) {
-                throw new UsernameNotFoundException("User with username: " + username + " not found");
+        if (loginApiService.getSemanticLogin(userDto.getUsername(), userDto.getPassword()).getLogin()) {
+            if (userService.findByUsername(userDto.getUsername()) == null) {
+                userService.register(userDto.toUser());
             }
+            try {
+                String username = userDto.getUsername();
 
-            String token = jwtTokenProvider.createToken(username, user.getRoles());
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, userDto.getPassword()));
+                User user = userService.findByUsername(username);
 
-            Map<Object, Object> response = new HashMap<>();
-            response.put("username", username);
-            response.put("token", token);
-
-            return ResponseEntity.ok(response);
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username or password");
-        }
+                if (user == null) {
+                    throw new UsernameNotFoundException("User with username: " + username + " not found");
+                }
+                String token = jwtTokenProvider.createToken(username, user.getRoles());
+                Map<Object, Object> response = new HashMap<>();
+                response.put("username", username);
+                response.put("token", token);
+                return ResponseEntity.ok(response);
+            } catch (AuthenticationException e) {
+                throw new BadCredentialsException("Invalid username or password");
+            }
+        } else
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PostMapping(value = "create")
-    public ResponseEntity getUserById(@RequestBody UserDto userDto) {
-        User user = userService.findByEmail(userDto.getEmail());
-
-        if (user != null) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("User with email " + userDto.getEmail() + " already exist");
-        }
-
-        userService.register(userDto.toUser());
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

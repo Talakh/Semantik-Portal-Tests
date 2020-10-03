@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) {
+
         Role roleUser = roleRepository.findByName("ROLE_USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singletonList(roleUser));

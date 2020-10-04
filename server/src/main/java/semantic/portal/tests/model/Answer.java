@@ -24,7 +24,7 @@ public class Answer {
     @Column(length = 4096)
     private String answer;
 
-    @Column(length = 4096)
+    @Column(name = "is_correct", length = 4096)
     private boolean correct;
 
     @Column(length = 4096)

@@ -1,22 +1,26 @@
 package semantic.portal.tests.dto;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
 public class TestResultDto {
-    private int questionsCount;
-    private int correctAnswersCount;
+    private long questionsCount;
+    private long correctAnswersCount;
     private boolean isPassed;
-    private int mark;
+    private double percent;
+    private String branch;
     private List<TopicToRepeat> topicsToRepeat;
 
 
+    @Builder
     @Data
-    private static class TopicToRepeat {
-        private String conceptId;
-        private String name;
-        private String topicName;
+    @EqualsAndHashCode
+    public static class TopicToRepeat {
+        private String domainUrl;
+        private String domainName;
     }
 }

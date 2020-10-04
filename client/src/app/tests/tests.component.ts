@@ -8,6 +8,7 @@ import {AttemptService} from "../service/attempt.service";
 import {BranchChild} from "../model/branch-child.model";
 import {FormControl} from "@angular/forms";
 import {Observable} from "rxjs";
+import {AttemptResult} from "../model/attempt-result.model";
 
 enum TestTypeEnum {
   ONE_CORRECT_ANSWER = 'ONE_CORRECT_ANSWER',
@@ -21,7 +22,7 @@ enum TestTypeEnum {
   styleUrls: ['./tests.component.css']
 })
 export class TestsComponent implements OnInit {
-  branch: string = "Select the subject";
+  branch: BranchChild;
   difficultLevel: string = "Select the difficult level";
   branches: BranchChild[];
   attempt: Attempt;
@@ -34,6 +35,7 @@ export class TestsComponent implements OnInit {
   isCorrect: boolean;
   correctAnswerId: string;
   correctAnswerIds: string[];
+  attemptResult: AttemptResult;
 
   constructor(private testsService: TestsService,
               private attemptService: AttemptService) {
@@ -75,7 +77,7 @@ export class TestsComponent implements OnInit {
     this.answerId = answerId;
   }
 
-  changeBranch(branch: string) {
+  changeBranch(branch: BranchChild) {
     this.branch = branch;
   }
 
@@ -99,7 +101,7 @@ export class TestsComponent implements OnInit {
     this.needCheck = false;
   }
 
-  normalizeAnswer(answer: string) : string {
+  normalizeAnswer(answer: string): string {
     var lines = [];
     var line = "";
     let arr = answer.split(" ");
@@ -113,5 +115,13 @@ export class TestsComponent implements OnInit {
     })
     if (line.length > 0) lines.push(line);
     return lines.join("\n  ");
+  }
+
+  finish() {
+    this.attemptService.getResult(this.attempt.attemptId)
+      .subscribe((res) => {
+        console.log("RESULT " + this.attemptResult);
+        this.attemptResult = res;
+      });
   }
 }

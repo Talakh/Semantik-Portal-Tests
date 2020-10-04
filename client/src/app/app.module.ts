@@ -6,7 +6,7 @@ import {AppComponent} from './app.component';
 import {TokenService} from "./service/token.service";
 import {HttpClientModule} from "@angular/common/http";
 import {TestsComponent} from './tests/tests.component';
-import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TestsService} from "./service/tests.service";
 import {AttemptService} from "./service/attempt.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

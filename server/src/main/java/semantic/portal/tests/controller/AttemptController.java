@@ -4,11 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import semantic.portal.tests.dto.CreateTestRequest;
+import semantic.portal.tests.dto.TestResultDto;
 import semantic.portal.tests.model.Attempt;
-import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.tests.TestManager;
 
-import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -26,5 +26,10 @@ public class AttemptController {
         log.info("Create attempt request: {}", request);
         Attempt attempt = testManager.create(request.getBranch(), request.getDifficultLevel());
         return ResponseEntity.ok(attempt);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TestResultDto> getResult(@PathVariable UUID id) {
+        return ResponseEntity.ok(testManager.getResult(id));
     }
 }

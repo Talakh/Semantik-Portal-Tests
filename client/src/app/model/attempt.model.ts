@@ -1,6 +1,8 @@
 import {Test} from "./test.model";
+import {BranchChild} from "./branch-child.model";
 
 export interface Attempt {
-  id: string;
+  attemptId: string;
+  branch: BranchChild;
   tests: Test[];
 }

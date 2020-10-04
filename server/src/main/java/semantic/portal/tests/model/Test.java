@@ -25,12 +25,15 @@ public class Test {
     @Lob
     private String question;
 
+    @Column
+    private String domainUrl;
+
+    @Column
+    private String domainName;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private List<Question> matchQuestion;
-
-    @Column(length = 4096)
-    private String branch;
 
     @Column(length = 4096)
     private TestTypeEnum type;
@@ -39,4 +42,16 @@ public class Test {
     @JoinColumn(name = "test_id")
     @Column(length = 4096)
     private List<Answer> answers;
+
+    @Column
+    private UUID userAnswerId;
+
+    @ElementCollection
+    private List<UUID> userAnswerIds;
+
+    @Column
+    private Boolean answerResult;
+
+    @Column(name = "attempt_id")
+    private UUID attemptId;
 }

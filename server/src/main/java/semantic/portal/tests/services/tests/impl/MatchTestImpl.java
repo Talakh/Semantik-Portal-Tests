@@ -25,12 +25,12 @@ public class MatchTestImpl implements SPTest {
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
     private static final Random random = new Random();
     private final ConceptApiService conceptApiService;
-    @Autowired
-    AnswerRepository answerRepository;
+    private final AnswerRepository answerRepository;
 
     @Autowired
-    public MatchTestImpl(ConceptApiService conceptApiService) {
+    public MatchTestImpl(ConceptApiService conceptApiService, AnswerRepository answerRepository) {
         this.conceptApiService = conceptApiService;
+        this.answerRepository = answerRepository;
     }
 
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
@@ -54,6 +54,7 @@ public class MatchTestImpl implements SPTest {
         Collections.shuffle(questions);
         Collections.shuffle(answers);
 
+        // TODO: 04.10.2020 add domainUrl/domainName
         return Test.builder()
                 .matchQuestion(questions)
                 .answers(answers)

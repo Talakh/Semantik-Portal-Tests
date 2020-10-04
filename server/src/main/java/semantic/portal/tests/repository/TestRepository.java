@@ -9,6 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface TestRepository extends JpaRepository<Test, UUID> {
-
-   List<Test> findAllByBranch(String branch);
+   List<Test> findAllByAttemptId(UUID attemptId);
 }

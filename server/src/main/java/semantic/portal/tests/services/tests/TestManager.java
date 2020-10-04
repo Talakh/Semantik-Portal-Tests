@@ -6,11 +6,12 @@ import semantic.portal.tests.enums.DifficultLevelEnum;
 import semantic.portal.tests.model.Attempt;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface TestManager {
-    Attempt create(String branchName, DifficultLevelEnum difficult);
+    Attempt create(BranchChildDto branch, DifficultLevelEnum difficult);
 
-    TestResultDto finishTest(String attemptId);
+    TestResultDto getResult(UUID attemptId);
 
     List<BranchChildDto> getAllBranches();
 }

@@ -13,6 +13,6 @@ class TestManagerImplTest {
 
     @Test
     public void test() {
-        System.out.println(testManager.create("python", DifficultLevelEnum.LOW));
+//        System.out.println(testManager.create("python", DifficultLevelEnum.LOW));
     }
 }

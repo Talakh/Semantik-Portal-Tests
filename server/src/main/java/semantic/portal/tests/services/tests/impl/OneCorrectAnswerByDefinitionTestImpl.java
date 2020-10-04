@@ -17,7 +17,7 @@ import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 
 @Service
 public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
-    private static final String questionTemplate = "The purpose of which concept describes the statement \"%s\"?";
+    private static final String QUESTION_TEMPLATE = "The purpose of which concept describes the statement \"%s\"?";
     private static final int ANSWERS_COUNT = 4;
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
 
@@ -32,8 +32,10 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
         List<ThesisDTO> thesisDTOS = getRandomTheseByConcept(concepts, theses);
         ThesisDTO thesisDTO = getRandomThesis(thesisDTOS);
+
+        // TODO: 04.10.2020 add domainUrl/domainName
         return Test.builder()
-                .question(String.format(questionTemplate, thesisDTO.getThesis()))
+                .question(String.format(QUESTION_TEMPLATE, thesisDTO.getThesis()))
                 .answers(createAnswers(concepts, thesisDTO))
                 .type(ONE_CORRECT_ANSWER)
                 .build();

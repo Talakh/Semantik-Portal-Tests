@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public class CheckServiceImpl implements CheckService {
     private final TestRepository testRepository;
 
-
     public CheckServiceImpl(TestRepository testRepository) {
         this.testRepository = testRepository;
     }
@@ -50,10 +49,16 @@ public class CheckServiceImpl implements CheckService {
                 .filter(Answer::isCorrect)
                 .findFirst()
                 .orElseThrow(AnswerNotFoundException::new);
-        return AnswerCheckDto.builder()
+        AnswerCheckDto answer = AnswerCheckDto.builder()
                 .correctId(correctAnswer.getId())
                 .isTrue(correctAnswer.getId().equals(answerId))
                 .build();
+
+        test.setUserAnswerId(answerId);
+        test.setAnswerResult(answer.isTrue());
+        testRepository.save(test);
+
+        return answer;
     }
 
     private Map<UUID, Boolean> checkMatchTest(Test test, AnswerDto answerDto) {
@@ -75,10 +80,16 @@ public class CheckServiceImpl implements CheckService {
                 .filter(Answer::isCorrect)
                 .map(Answer::getId)
                 .collect(Collectors.toList());
-        return AnswerCheckDto.builder()
+        AnswerCheckDto answer = AnswerCheckDto.builder()
                 .correctIds(correctAnswerIds)
                 .isTrue(CollectionUtils.isEqualCollection(correctAnswerIds, answerIds))
                 .build();
+
+        test.setUserAnswerIds(answerIds);
+        test.setAnswerResult(answer.isTrue());
+        testRepository.save(test);
+
+        return answer;
     }
 
 }

@@ -5,6 +5,6 @@ import semantic.portal.tests.enums.DifficultLevelEnum;
 
 @Data
 public class CreateTestRequest {
-    private String branch;
+    private BranchChildDto branch;
     private DifficultLevelEnum difficultLevel;
 }

@@ -20,10 +20,12 @@ public class Attempt {
     @Id
     @GeneratedValue
     @Column(length = 4096)
-    private UUID id;
+    private UUID attemptId;
+
+    @Column
+    private String branch;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "test_id")
-    @Column(length = 4096)
+    @JoinColumn(name = "attempt_id")
     private List<Test> tests;
 }

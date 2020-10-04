@@ -29,6 +29,8 @@ public class OneCorrectAnswerTestImpl implements SPTest {
         ConceptDto question = getRandomConcept(possibleConceptsForTest);
 
         return Test.builder()
+                .domainUrl(question.getDomain())
+                .domainName(question.getConcept())
                 .question(String.format(QUESTION_TEMPLATE, question.getConcept()))
                 .answers(getAnswers(question, theses, possibleConceptsForTest))
                 .type(TestTypeEnum.ONE_CORRECT_ANSWER)

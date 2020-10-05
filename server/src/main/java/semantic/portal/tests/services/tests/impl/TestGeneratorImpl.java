@@ -16,35 +16,41 @@ import java.util.List;
 @Slf4j
 @Service
 public class TestGeneratorImpl implements TestGenerator {
-    private final SPTest oneCorrectAnswerTest;
+    private final SPTest oneCorrectAnswer;
     private final SPTest oneCorrectAnswerByDefinition;
-    private final SPTest severalCorrectAnswersTest;
-    private final SPTest matchTest;
+    private final SPTest oneCorrectAnswerForDemoCode;
+    private final SPTest severalCorrectAnswers;
+    private final SPTest match;
 
-    public TestGeneratorImpl(@Qualifier("severalCorrectAnswersTestImpl") SPTest severalCorrectAnswersTest,
-                             @Qualifier("oneCorrectAnswerTestImpl") SPTest oneCorrectAnswerTest,
+    public TestGeneratorImpl(@Qualifier("oneCorrectAnswerTestImpl") SPTest oneCorrectAnswer,
                              @Qualifier("oneCorrectAnswerByDefinitionTestImpl") SPTest oneCorrectAnswerByDefinition,
-                             @Qualifier("matchTestImpl") SPTest matchTest) {
-        this.severalCorrectAnswersTest = severalCorrectAnswersTest;
-        this.oneCorrectAnswerTest = oneCorrectAnswerTest;
+                             @Qualifier("oneCorrectAnswerForDemoCodeTestImpl") SPTest oneCorrectAnswerForDemoCode,
+                             @Qualifier("severalCorrectAnswersTestImpl") SPTest severalCorrectAnswers,
+                             @Qualifier("matchTestImpl") SPTest match) {
+        this.severalCorrectAnswers = severalCorrectAnswers;
+        this.oneCorrectAnswer = oneCorrectAnswer;
         this.oneCorrectAnswerByDefinition = oneCorrectAnswerByDefinition;
-        this.matchTest = matchTest;
+        this.oneCorrectAnswerForDemoCode = oneCorrectAnswerForDemoCode;
+        this.match = match;
     }
 
     @Override
     public List<Test> generate(List<ConceptDto> concepts, List<ThesisDTO> theses, DifficultLevelEnum difficult) {
         List<Test> tests = new ArrayList<>();
-        for (int i = 0; i < difficult.getOneCorrectAnswerCount(); i++) {
-            tests.add(oneCorrectAnswerTest.create(concepts, theses));
+        for (int i = 0; i < difficult.getOneAnswerCount(); i++) {
+            tests.add(oneCorrectAnswer.create(concepts, theses));
         }
-        for (int i = 0; i < difficult.getOneCorrectAnswerByDefinitionCount(); i++) {
+        for (int i = 0; i < difficult.getOneAnswerByDefinitionCount(); i++) {
             tests.add(oneCorrectAnswerByDefinition.create(concepts, theses));
         }
-        for (int i = 0; i < difficult.getSeveralCorrectAnswerCount(); i++) {
-            tests.add(severalCorrectAnswersTest.create(concepts, theses));
+        for (int i = 0; i < difficult.getDemoCodeCount(); i++) {
+            tests.add(oneCorrectAnswerForDemoCode.create(concepts, theses));
+        }
+        for (int i = 0; i < difficult.getSeveralAnswerCount(); i++) {
+            tests.add(severalCorrectAnswers.create(concepts, theses));
         }
         for (int i = 0; i < difficult.getMatchCount(); i++) {
-            tests.add(matchTest.create(concepts, theses));
+            tests.add(match.create(concepts, theses));
         }
         return tests;
     }

@@ -3,6 +3,7 @@ a {
 }
 .question {
   margin-bottom: 30px;
+  white-space: pre;
 }
 
 .answer {

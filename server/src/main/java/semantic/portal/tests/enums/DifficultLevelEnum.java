@@ -4,19 +4,24 @@ import lombok.Getter;
 
 @Getter
 public enum DifficultLevelEnum {
-    LOW(7,3,0,0),
-    MEDIUM(4,2,2,2),
-    HIGH(2,2,3,3);
-    private int oneCorrectAnswerCount;
-    private int oneCorrectAnswerByDefinitionCount;
-    private int severalCorrectAnswerCount;
+    LOW(5,3, 2, 0,0),
+    MEDIUM(2,2, 2, 2,2),
+    HIGH(2,2, 2, 3,3);
+    private int oneAnswerCount;
+    private int oneAnswerByDefinitionCount;
+    private int demoCodeCount;
+    private int severalAnswerCount;
     private int matchCount;
 
-    DifficultLevelEnum(int oneCorrectAnswerCount, int oneCorrectAnswerByDefinitionCount,
-                       int severalCorrectAnswerCount, int matchCount) {
-        this.oneCorrectAnswerCount = oneCorrectAnswerCount;
-        this.oneCorrectAnswerByDefinitionCount = oneCorrectAnswerByDefinitionCount;
-        this.severalCorrectAnswerCount = severalCorrectAnswerCount;
+    DifficultLevelEnum(int oneAnswerCount,
+                       int oneAnswerByDefinitionCount,
+                       int demoCodeCount,
+                       int severalAnswerCount,
+                       int matchCount) {
+        this.oneAnswerCount = oneAnswerCount;
+        this.oneAnswerByDefinitionCount = oneAnswerByDefinitionCount;
+        this.demoCodeCount = demoCodeCount;
+        this.severalAnswerCount = severalAnswerCount;
         this.matchCount = matchCount;
     }
 }

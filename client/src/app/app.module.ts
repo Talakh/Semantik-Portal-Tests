@@ -3,45 +3,61 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {TokenService} from "./service/token.service";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {TestsComponent} from './tests/tests.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TestsService} from "./service/tests.service";
 import {AttemptService} from "./service/attempt.service";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatSelectModule} from "@angular/material/select";
-import {MatOptionModule} from "@angular/material/core";
-import {MatButtonModule} from "@angular/material/button";
+import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {LoginComponent} from "./login/login.component";
+import {LogoutComponent} from "./logout/logout.component";
+import {UserComponent} from "./user/user.component";
+import {AddUserComponent} from "./add-user/add-user.component";
+import {MatCardModule} from "@angular/material/card";
+import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatRadioModule} from "@angular/material/radio";
+import {MatTableModule} from "@angular/material/table";
+import {BasicAuthHtppInterceptorService} from "./service/basic-auth-interceptor.service";
+import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSelectModule} from "@angular/material/select";
+import {MatRadioModule} from "@angular/material/radio";
+import {HeaderComponent} from "./header/header.component";
+import {FooterComponent} from "./footer/footer.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    TestsComponent
+    TestsComponent,
+    LoginComponent,
+    LogoutComponent,
+    UserComponent,
+    AddUserComponent,
+    HeaderComponent,
+    FooterComponent,
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatInputModule,
-    MatAutocompleteModule,
     BrowserAnimationsModule,
-    MatButtonModule,
     ReactiveFormsModule,
-    MatRadioModule,
-    MatCheckboxModule
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatRadioModule
   ],
   providers: [
-    TokenService,
     TestsService,
-    AttemptService],
+    AttemptService,
+    [ { provide: HTTP_INTERCEPTORS, useClass: BasicAuthHtppInterceptorService, multi: true }],
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

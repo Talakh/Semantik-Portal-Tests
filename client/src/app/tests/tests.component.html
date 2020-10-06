@@ -23,7 +23,7 @@
   <div style="padding-top:10px;">
     <h2 class="row justify-content-center question">{{currentTestIndex + 1}}. {{currentTest.question}}</h2>
     <div *ngIf="currentTest.type == testTypes.ONE_CORRECT_ANSWER">
-      <mat-radio-group class="row justify-content-center">
+      <mat-radio-group class="row justify-content-start">
         <mat-radio-button *ngFor="let one of currentTest.answers"
                           name="defaultExampleRadios"
                           style="display: block;"
@@ -43,7 +43,7 @@
       </div>
     </div>
     <div *ngIf="currentTest.type == testTypes.SEVERAL_CORRECT_ANSWER">
-      <div class="row justify-content-center" *ngFor="let several of currentTest.answers">
+      <div class="row justify-content-start" *ngFor="let several of currentTest.answers">
         <mat-checkbox
           (click)="addOrRemoveAnswer(several.id)"
           value="{{several.id}}">

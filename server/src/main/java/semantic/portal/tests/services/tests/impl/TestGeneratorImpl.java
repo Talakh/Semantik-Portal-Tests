@@ -52,6 +52,7 @@ public class TestGeneratorImpl implements TestGenerator {
         for (int i = 0; i < difficult.getMatchCount(); i++) {
             tests.add(match.create(concepts, theses));
         }
+        log.info("Tests : {}", tests);
         return tests;
     }
 }

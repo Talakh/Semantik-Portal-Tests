@@ -106,7 +106,7 @@ export class TestsComponent implements OnInit {
     var line = "";
     let arr = answer.split(" ");
     arr.forEach(word => {
-      if (line.length + word.length < 100) {
+      if (line.length + word.length < 90) {
         line = line + " " + word
       } else {
         lines.push(line);

@@ -60,6 +60,24 @@
         <button mat-raised-button (click)="checkSeveralAnswer(currentTest.id)">Check</button>
       </div>
     </div>
+    <div *ngIf="currentTest.type == testTypes.MATCH">
+      <div class="row justify-content-center">
+        <ol>
+          <li class="question row" *ngFor="let q of currentTest.matchQuestion">
+            <div style="width: 600px">{{normalizeAnswer(q.question)}}</div>
+            <mat-form-field appearance="fill" class="col-md-3">
+              <mat-label>Select the subject</mat-label>
+              <mat-select>
+                <mat-option *ngFor="let a of currentTest.answers" [value]="a">{{normalizeAnswer(a.answer)}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </li>
+        </ol>
+      </div>
+      <div class="col text-center" *ngIf="needCheck">
+        <button mat-raised-button (click)="checkSeveralAnswer(currentTest.id)">Check</button>
+      </div>
+    </div>
   </div>
   <div class="col text-center" *ngIf="!needCheck && currentTestIndex < attempt.tests.length - 1">
     <button mat-raised-button (click)="nextTest()">Next</button>
@@ -81,7 +99,8 @@
     <span *ngIf="!attemptResult.isPassed" style="color: red">FAILED</span>
   </h2>
   <br>
-  <h2 *ngIf="attemptResult.isPassed" class="row justify-content-center">Congratulations, you've successfully passed the test.</h2>
+  <h2 *ngIf="attemptResult.isPassed" class="row justify-content-center">Congratulations, you've successfully passed the
+    test.</h2>
   <h2 *ngIf="!attemptResult.isPassed" class="row justify-content-center">You’re almost there… Try it again!</h2>
   <br>
   <div *ngIf="attemptResult.topicsToRepeat.length > 0">

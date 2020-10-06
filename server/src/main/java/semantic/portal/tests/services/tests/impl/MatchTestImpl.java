@@ -54,7 +54,7 @@ public class MatchTestImpl implements SPTest {
         Collections.shuffle(questions);
         Collections.shuffle(answers);
 
-        // TODO: 04.10.2020 add domainUrl/domainName
+        // TODO: 04.10.2020 add domainUrl/domainName/question
         return Test.builder()
                 .matchQuestion(questions)
                 .answers(answers)

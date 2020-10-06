@@ -10,7 +10,7 @@ import {AddUserComponent} from "./add-user/add-user.component";
 const routes: Routes = [
   { path: 'tests', component: TestsComponent },
   { path: '', component: UserComponent,canActivate:[AuthGaurdService] },
-  { path: 'addemployee', component: AddUserComponent,canActivate:[AuthGaurdService]},
+  { path: 'addUser', component: AddUserComponent,canActivate:[AuthGaurdService]},
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent,canActivate:[AuthGaurdService] },
 ];

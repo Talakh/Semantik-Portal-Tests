@@ -21,17 +21,20 @@ public class TestGeneratorImpl implements TestGenerator {
     private final SPTest oneCorrectAnswerForDemoCode;
     private final SPTest severalCorrectAnswers;
     private final SPTest match;
+    private final SPTest unorderedList;
 
     public TestGeneratorImpl(@Qualifier("oneCorrectAnswerTestImpl") SPTest oneCorrectAnswer,
                              @Qualifier("oneCorrectAnswerByDefinitionTestImpl") SPTest oneCorrectAnswerByDefinition,
                              @Qualifier("oneCorrectAnswerForDemoCodeTestImpl") SPTest oneCorrectAnswerForDemoCode,
                              @Qualifier("severalCorrectAnswersTestImpl") SPTest severalCorrectAnswers,
-                             @Qualifier("matchTestImpl") SPTest match) {
+                             @Qualifier("matchTestImpl") SPTest match,
+                             @Qualifier("unorderedListTestImpl") SPTest unorderedList) {
         this.severalCorrectAnswers = severalCorrectAnswers;
         this.oneCorrectAnswer = oneCorrectAnswer;
         this.oneCorrectAnswerByDefinition = oneCorrectAnswerByDefinition;
         this.oneCorrectAnswerForDemoCode = oneCorrectAnswerForDemoCode;
         this.match = match;
+        this.unorderedList = unorderedList;
     }
 
     @Override
@@ -52,7 +55,9 @@ public class TestGeneratorImpl implements TestGenerator {
         for (int i = 0; i < difficult.getMatchCount(); i++) {
             tests.add(match.create(concepts, theses));
         }
-        log.info("Tests : {}", tests);
+        for (int i = 0; i < difficult.getUnorderedListCount(); i++) {
+            tests.add(unorderedList.create(concepts, theses));
+        }
         return tests;
     }
 }

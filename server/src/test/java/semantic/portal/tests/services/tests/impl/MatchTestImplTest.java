@@ -22,7 +22,7 @@ class MatchTestImplTest {
     public void createTest(){
         semantic.portal.tests.model.Test test = matchTest.create(
                 branchApiService.getConcepts("laravel"), branchApiService.getTheses("laravel"));
-        System.out.println("Q - " + test.getQuestion());
+        System.out.println("Q - " + test.getMatchQuestion());
         System.out.println("A - " + test.getAnswers().stream().map(Answer::getAnswer).collect(Collectors.joining("\n")));
     }
 }

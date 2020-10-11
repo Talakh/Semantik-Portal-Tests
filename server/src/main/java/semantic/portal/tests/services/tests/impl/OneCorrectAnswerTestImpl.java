@@ -9,6 +9,7 @@ import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.tests.SPTest;
+import semantic.portal.tests.utils.TestUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class OneCorrectAnswerTestImpl implements SPTest {
 
     @Override
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
-        Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(concepts, theses);
+        Map<Integer, ConceptDto> possibleConceptsForTest = TestUtils.filterPossibleConcepts(thesesTypesForAnswer,concepts, theses);
         ConceptDto question = getRandomConcept(possibleConceptsForTest);
 
         return Test.builder()
@@ -35,18 +36,6 @@ public class OneCorrectAnswerTestImpl implements SPTest {
                 .answers(getAnswers(question, theses, possibleConceptsForTest))
                 .type(TestTypeEnum.ONE_CORRECT_ANSWER)
                 .build();
-    }
-    private Map<Integer, ConceptDto> filterPossibleConcepts(List<ConceptDto> concepts, List<ThesisDTO> theses) {
-        List<Integer> possibleConcepts =  theses.stream()
-                .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
-                .filter(t -> Objects.isNull(t.getToThesisId()))
-                .map(ThesisDTO::getConceptId)
-                .collect(Collectors.toList());
-
-        return  concepts.stream()
-                .filter(conceptDto -> conceptDto.getIsAspect() == 0)
-                .filter(conceptDto -> possibleConcepts.contains(conceptDto.getId()))
-                .collect(Collectors.toMap(ConceptDto::getId, c -> c));
     }
 
     private List<Answer> getAnswers(ConceptDto question, List<ThesisDTO> theses, Map<Integer, ConceptDto> conceptMap) {

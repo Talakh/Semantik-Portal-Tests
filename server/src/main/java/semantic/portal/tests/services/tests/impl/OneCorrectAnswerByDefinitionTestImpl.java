@@ -8,21 +8,19 @@ import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.services.api.ConceptApiService;
 import semantic.portal.tests.services.tests.SPTest;
+import semantic.portal.tests.utils.TestUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static semantic.portal.tests.enums.TestTypeEnum.ONE_CORRECT_ANSWER;
 import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
+import static semantic.portal.tests.utils.TestUtils.getRandomConcept;
 
 @Service
 public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
     private static final String QUESTION_TEMPLATE = "The purpose of which concept describes the statement \"%s\"?";
-    private static final int ANSWERS_COUNT = 4;
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
-
     private final ConceptApiService conceptApiService;
-    private static final Random random = new Random();
 
     public OneCorrectAnswerByDefinitionTestImpl(ConceptApiService conceptApiService) {
         this.conceptApiService = conceptApiService;
@@ -30,50 +28,24 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
 
     @Override
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
-        List<ThesisDTO> thesisDTOS = getRandomTheseByConcept(concepts, theses);
-        ThesisDTO thesisDTO = getRandomThesis(thesisDTOS);
-
-        // TODO: 04.10.2020 add domainUrl/domainName
+        Map<Integer, ConceptDto> possibleConceptsForTest = TestUtils.filterPossibleConcepts(thesesTypesForAnswer, concepts, theses);
+        ConceptDto question = getRandomConcept(possibleConceptsForTest);
+        ThesisDTO thesisDTO = getConceptThesis(question.getId(), theses);
         return Test.builder()
+                .domainUrl(question.getDomain())
+                .domainName(question.getConcept())
                 .question(String.format(QUESTION_TEMPLATE, thesisDTO.getThesis()))
-                .answers(createAnswers(concepts, thesisDTO))
+                .answers(createAnswers(new ArrayList<>(possibleConceptsForTest.values()), thesisDTO))
                 .type(ONE_CORRECT_ANSWER)
                 .build();
     }
 
-    private List<ThesisDTO> getRandomTheseByConcept(List<ConceptDto> concepts, List<ThesisDTO> thesisDTOS) {
-        Map<String, List<ConceptDto>> possibleDomainsForTest = filterPossibleDomains(concepts);
-        String domainForTest = getDomainForTest(possibleDomainsForTest);
-        List<ConceptDto> domainConceptsForTest = possibleDomainsForTest.get(domainForTest);
-        List<ThesisDTO> thesisDto = new ArrayList<>();
-        for (ConceptDto conceptDto : domainConceptsForTest) {
-            thesisDTOS.stream()
-                    .filter(thesisDTO -> thesesTypesForAnswer.contains(thesisDTO.getClazz()))
-                    .filter(thesisDTO -> conceptDto.getId() == thesisDTO.getConceptId())
-                    .forEach(thesisDto::add);
-        }
-        if (!thesisDto.isEmpty()) {
-            return thesisDto;
-        } else {
-            return getRandomTheseByConcept(concepts, thesisDTOS);
-        }
-    }
-
-    // TODO: 30.09.2020
-// не фільтрувати по домену
-    // фільтрувати по
-// 1. toThesis id == null
-    // isAspect для концепта ==0 ?
-    // додати фільтрацію по класах
-    // якщо бранча пуста, то кидати ексепшн
-
-
-
-
- private ThesisDTO getRandomThesis(List<ThesisDTO> thesisDTOS) {
-        ThesisDTO thesis = thesisDTOS.get(random.nextInt(thesisDTOS.size()));
-        thesisDTOS.remove(thesis);
-        return thesis;
+    private ThesisDTO getConceptThesis(int conceptId, List<ThesisDTO> theses) {
+        return theses.stream()
+                .filter(thesis -> thesis.getConceptId() == conceptId)
+                .filter(thesis -> thesesTypesForAnswer.contains(thesis.getClazz()))
+                .findAny()
+                .orElseThrow(NullPointerException::new);
     }
 
     private List<Answer> createAnswers(List<ConceptDto> concepts, ThesisDTO thesisDTO) {
@@ -81,9 +53,8 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
         List<Answer> answers = new ArrayList<>();
         Answer rightAnswer = Answer.createAnswer(rightConceptDto.getConcept(), true);
         answers.add(rightAnswer);
-        List<ConceptDto> conceptDtos =  filterPossibleDomains(concepts).get(rightConceptDto.getDomain());
-        Collections.shuffle(conceptDtos);
-       conceptDtos.stream()
+        Collections.shuffle(concepts);
+        concepts.stream()
                 .map(conceptDto -> Answer.createAnswer(conceptDto.getConcept(), false))
                 .filter(answer -> !Objects.equals(rightAnswer.getAnswer(), answer.getAnswer()))
                 .limit(4)
@@ -91,17 +62,4 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
         Collections.shuffle(answers);
         return answers;
     }
-
-    private Map<String, List<ConceptDto>> filterPossibleDomains(List<ConceptDto> concepts) {
-        return concepts.stream()
-                .collect(Collectors.groupingBy(ConceptDto::getDomain))
-                .entrySet().stream()
-                .filter(entry -> entry.getValue().size() >= ANSWERS_COUNT)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    private String getDomainForTest(Map<String, List<ConceptDto>> domainsMap) {
-        return new ArrayList<>(domainsMap.keySet()).get(random.nextInt(domainsMap.size()));
-    }
-
 }

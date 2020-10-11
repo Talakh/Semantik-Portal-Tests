@@ -1,0 +1,47 @@
+a {
+  text-decoration: none;
+}
+
+.question{
+  white-space: pre;
+
+  .code{
+    margin-top: 12px;
+    font-size: 20px;
+    color: #4a4a4a;
+    background: #50505021;
+    padding: 15px;
+    border-radius: 10px;
+  }
+}
+
+.answer {
+  border-radius: 5px;
+  padding: 5px;
+  white-space: normal;
+  width: 700px;
+  text-align: center;
+  opacity: inherit;
+  position: inherit;
+
+  &:hover {
+    background: #96b7f55c;
+  }
+}
+
+.wrong-answer{
+  background: #f55353ab;
+}
+
+.correct-answer{
+  background: #67f362a8;
+}
+
+.btn-custom{
+  width: 300px;
+  height: 50px;
+}
+
+.blocked{
+  pointer-events: none;
+}

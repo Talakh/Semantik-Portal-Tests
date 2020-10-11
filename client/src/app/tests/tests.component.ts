@@ -19,7 +19,7 @@ enum TestTypeEnum {
 @Component({
   selector: 'app-tests',
   templateUrl: './tests.component.html',
-  styleUrls: ['./tests.component.css']
+  styleUrls: ['./tests.component.scss']
 })
 export class TestsComponent implements OnInit {
   branch: BranchChild;
@@ -55,6 +55,7 @@ export class TestsComponent implements OnInit {
       }))
       .subscribe((res: Attempt) => {
         this.attempt = res;
+        console.log('this.attempt', this.attempt)
       }).add();
   }
 
@@ -92,6 +93,15 @@ export class TestsComponent implements OnInit {
     }
   }
 
+  checkAnswer(testId: string) {
+    if (this.currentTest.type === this.testTypes.ONE_CORRECT_ANSWER) {
+      this.checkOneAnswer(testId);
+    } else if (this.currentTest.type === this.testTypes.SEVERAL_CORRECT_ANSWER ||
+                this.currentTest.type === this.testTypes.MATCH) {
+      this.checkSeveralAnswer(testId);
+    }
+  }
+
   checkSeveralAnswer(testId: string) {
     this.testsService.checkAnswer({"testId": testId, "answerIds": this.answerIds})
       .subscribe((res) => {
@@ -101,7 +111,7 @@ export class TestsComponent implements OnInit {
     this.needCheck = false;
   }
 
-  normalizeAnswer(answer: string): string {
+  normalizeText(answer: string): string {
     var lines = [];
     var line = "";
     let arr = answer.split(" ");

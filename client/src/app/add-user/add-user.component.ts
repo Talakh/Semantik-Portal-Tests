@@ -5,7 +5,7 @@ import {User, HttpClientService} from "../service/httpclient.service";
 @Component({
   selector: "app-add-employee",
   templateUrl: "./add-user.component.html",
-  styleUrls: ["./add-user.component.css"]
+  styleUrls: ["./add-user.component.scss"]
 })
 export class AddUserComponent implements OnInit {
   user: User = new User("", "", "", "");

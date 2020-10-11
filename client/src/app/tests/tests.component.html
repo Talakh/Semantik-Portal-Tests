@@ -19,71 +19,70 @@
     <button mat-raised-button (click)="createTests()">Create</button>
   </div>
 </div>
-<div *ngIf="attempt != null && attempt.tests.length > 0 && attemptResult == null" class="container">
-  <div style="padding-top:10px;">
-    <h2 class="row justify-content-center question">{{currentTestIndex + 1}}. {{currentTest.question}}</h2>
+<div *ngIf="attempt != null && attempt.tests.length > 0 && attemptResult == null" class="container pt-3">
+
+  <mat-progress-bar class="mb-3" mode="determinate" [value]="currentTestIndex / attempt.tests.length * 100"></mat-progress-bar>
+
+    <h2 class="row justify-content-center question mb-5">
+      <span>{{currentTestIndex + 1}}. {{normalizeText(currentTest.question)}}</span>
+      <code *ngIf="currentTest.codeInQuestion" class="code justify-content-center ">{{currentTest.codeInQuestion}}</code>
+    </h2>
+
+
     <div *ngIf="currentTest.type == testTypes.ONE_CORRECT_ANSWER">
-      <mat-radio-group class="row justify-content-start">
+      <mat-radio-group class="row justify-content-center" [class.blocked]="!needCheck">
         <mat-radio-button *ngFor="let one of currentTest.answers"
                           name="defaultExampleRadios"
-                          style="display: block;"
                           (click)="changeAnswer(one.id);"
-                          value="{{one.id}}">
-          <div class="answer"
-               [ngStyle]="{'background-color':
-               (needCheck && one.id == answerId) ? 'dodgerblue' :
-               (!needCheck && one.id == correctAnswerId) ? 'lightgreen' :
-               (!needCheck && !isCorrect && one.id == answerId) ? '#e6472c' : 'white'}">
-            {{normalizeAnswer(one.answer)}}
+                          value="{{one.id}}"
+                          class="d-block">
+          <div class="answer text-left"
+               [class.wrong-answer] = '(!needCheck && !isCorrect && one.id == answerId)'
+               [class.correct-answer] = '(!needCheck && one.id == correctAnswerId)'>
+            {{normalizeText(one.answer)}}
           </div>
         </mat-radio-button>
       </mat-radio-group>
-      <div class="col text-center" *ngIf="needCheck">
-        <button mat-raised-button (click)="checkOneAnswer(currentTest.id)">Check</button>
-      </div>
     </div>
+
     <div *ngIf="currentTest.type == testTypes.SEVERAL_CORRECT_ANSWER">
-      <div class="row justify-content-start" *ngFor="let several of currentTest.answers">
+      <div class="row justify-content-center" *ngFor="let several of currentTest.answers" [class.blocked]="!needCheck">
         <mat-checkbox
           (click)="addOrRemoveAnswer(several.id)"
           value="{{several.id}}">
-          <div class="answer"
-               [ngStyle]="{'background-color':
-            (needCheck && answerIds.includes(several.id)) ? 'dodgerblue' :
-                         (!needCheck && correctAnswerIds.includes(several.id)) ? 'lightgreen' :
-                         (!needCheck && !correctAnswerIds.includes(several.id) && answerIds.includes(several.id)) ? '#e6472c' : 'white'}">
-            {{normalizeAnswer(several.answer)}}
+          <div class="answer text-left"
+               [class.wrong-answer] = '(!needCheck && !correctAnswerIds.includes(several.id) && answerIds.includes(several.id))'
+               [class.correct-answer] = '(!needCheck && correctAnswerIds.includes(several.id))'>
+            {{normalizeText(several.answer)}}
           </div>
         </mat-checkbox>
-      </div>
-      <div class="col text-center" *ngIf="needCheck">
-        <button mat-raised-button (click)="checkSeveralAnswer(currentTest.id)">Check</button>
       </div>
     </div>
     <div *ngIf="currentTest.type == testTypes.MATCH">
       <div class="row justify-content-center">
         <ol>
           <li class="question row" *ngFor="let q of currentTest.matchQuestion">
-            <div style="width: 600px">{{normalizeAnswer(q.question)}}</div>
+            <div style="width: 600px">{{normalizeText(q.question)}}</div>
             <mat-form-field appearance="fill" class="col-md-3">
               <mat-label>Select the subject</mat-label>
               <mat-select>
-                <mat-option *ngFor="let a of currentTest.answers" [value]="a">{{normalizeAnswer(a.answer)}}</mat-option>
+                <mat-option *ngFor="let a of currentTest.answers" [value]="a">{{normalizeText(a.answer)}}</mat-option>
               </mat-select>
             </mat-form-field>
           </li>
         </ol>
       </div>
-      <div class="col text-center" *ngIf="needCheck">
-        <button mat-raised-button (click)="checkSeveralAnswer(currentTest.id)">Check</button>
-      </div>
     </div>
+
+
+  <div class="col text-center" *ngIf="needCheck">
+    <button mat-raised-button class="btn-custom mt-4" color="primary" (click)="checkAnswer(currentTest.id)">Check</button>
   </div>
   <div class="col text-center" *ngIf="!needCheck && currentTestIndex < attempt.tests.length - 1">
-    <button mat-raised-button (click)="nextTest()">Next</button>
+    <button mat-raised-button class="btn-custom mt-4" (click)="nextTest()">Next</button>
   </div>
   <div class="col text-center" *ngIf="!needCheck && currentTestIndex == attempt.tests.length - 1">
-    <button mat-raised-button (click)="finish()">Finish</button>
+    <button mat-raised-button class="btn-custom mt-4" (click)="finish()">Finish</button>
   </div>
 </div>
 <div *ngIf="attemptResult != null" class="container">

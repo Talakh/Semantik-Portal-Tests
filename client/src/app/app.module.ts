@@ -24,6 +24,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatRadioModule} from "@angular/material/radio";
 import {HeaderComponent} from "./header/header.component";
 import {FooterComponent} from "./footer/footer.component";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 @NgModule({
   declarations: [
@@ -37,22 +38,23 @@ import {FooterComponent} from "./footer/footer.component";
     FooterComponent,
 
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatRadioModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatTableModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatProgressBarModule
+    ],
   providers: [
     TestsService,
     AttemptService,

@@ -18,7 +18,7 @@ import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 @Service
 public class OneCorrectAnswerForDemoCodeTestImpl implements SPTest {
     private static final int ANSWERS_COUNT = 4;
-    private static final String QUESTION_TEMPLATE = "The purpose of which concept describes the demo code? \n%s";
+    private static final String QUESTION_TEMPLATE = "The purpose of which concept describes the demo code?";
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(DEMO_CODE.getValue(),
             ESSENCE.getValue());
 
@@ -31,7 +31,8 @@ public class OneCorrectAnswerForDemoCodeTestImpl implements SPTest {
         return Test.builder()
                 .domainUrl(question.getDomain())
                 .domainName(question.getConcept())
-                .question(String.format(QUESTION_TEMPLATE, demoCodeTheses.getThesis()))
+                .question(QUESTION_TEMPLATE)
+                .codeInQuestion(demoCodeTheses.getThesis())
                 .answers(getAnswers(question, possibleConceptsForTest))
                 .type(TestTypeEnum.ONE_CORRECT_ANSWER)
                 .build();

@@ -25,6 +25,9 @@ public class Test {
     @Lob
     private String question;
 
+    @Lob
+    private String codeInQuestion;
+
     @Column
     private String domainUrl;
 

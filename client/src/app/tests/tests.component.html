@@ -65,8 +65,11 @@
             <div style="width: 600px">{{normalizeText(q.question)}}</div>
             <mat-form-field appearance="fill" class="col-md-3">
               <mat-label>Select the subject</mat-label>
-              <mat-select>
-                <mat-option *ngFor="let a of currentTest.answers" [value]="a">{{normalizeText(a.answer)}}</mat-option>
+              <mat-select (valueChange)="answerMap[q.id] = $event">
+                <mat-option *ngFor="let a of currentTest.answers"
+                            [value]="a.id">
+                  {{normalizeText(a.answer)}}
+                </mat-option>
               </mat-select>
             </mat-form-field>
           </li>

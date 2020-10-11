@@ -1,13 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {TestsService} from "../service/tests.service";
-import {finalize, map, startWith} from "rxjs/operators";
+import {finalize} from "rxjs/operators";
 import {Test} from "../model/test.model";
-import {Answer} from "../model/answer.model";
 import {Attempt} from "../model/attempt.model";
 import {AttemptService} from "../service/attempt.service";
 import {BranchChild} from "../model/branch-child.model";
-import {FormControl} from "@angular/forms";
-import {Observable} from "rxjs";
 import {AttemptResult} from "../model/attempt-result.model";
 
 enum TestTypeEnum {
@@ -32,9 +29,12 @@ export class TestsComponent implements OnInit {
   needCheck: boolean = true;
   answerId: string;
   answerIds: string[] = [];
+  answerMap = {};
   isCorrect: boolean;
   correctAnswerId: string;
   correctAnswerIds: string[];
+  correctAnswerMap: {};
+
   attemptResult: AttemptResult;
 
   constructor(private testsService: TestsService,
@@ -62,16 +62,8 @@ export class TestsComponent implements OnInit {
   nextTest() {
     this.currentTest = this.attempt.tests[++this.currentTestIndex];
     this.needCheck = true;
-  }
-
-  checkOneAnswer(testId: string) {
-    this.testsService.checkAnswer({"testId": testId, "answerId": this.answerId})
-      .subscribe((res) => {
-        console.log(res);
-        this.isCorrect = res.isTrue;
-        this.correctAnswerId = res.correctId;
-      });
-    this.needCheck = false;
+    this.answerIds = [];
+    this.answerMap = new Map<string, string>();
   }
 
   changeAnswer(answerId: string) {
@@ -96,10 +88,21 @@ export class TestsComponent implements OnInit {
   checkAnswer(testId: string) {
     if (this.currentTest.type === this.testTypes.ONE_CORRECT_ANSWER) {
       this.checkOneAnswer(testId);
-    } else if (this.currentTest.type === this.testTypes.SEVERAL_CORRECT_ANSWER ||
-                this.currentTest.type === this.testTypes.MATCH) {
+    } else if (this.currentTest.type === this.testTypes.SEVERAL_CORRECT_ANSWER) {
       this.checkSeveralAnswer(testId);
+    } else if(this.currentTest.type === this.testTypes.MATCH) {
+      this.checkMapAnswer(testId);
     }
+  }
+
+  checkOneAnswer(testId: string) {
+    this.testsService.checkAnswer({"testId": testId, "answerId": this.answerId})
+      .subscribe((res) => {
+        console.log(res);
+        this.isCorrect = res.isTrue;
+        this.correctAnswerId = res.correctId;
+      });
+    this.needCheck = false;
   }
 
   checkSeveralAnswer(testId: string) {
@@ -107,6 +110,17 @@ export class TestsComponent implements OnInit {
       .subscribe((res) => {
         console.log(res);
         this.correctAnswerIds = res.correctIds;
+      });
+    this.needCheck = false;
+  }
+
+  private checkMapAnswer(testId: string) {
+    console.log("answerMap: " , this.answerMap);
+    this.testsService.checkAnswer({"testId": testId, "question2Answer": this.answerMap})
+      .subscribe((res) => {
+        console.log(res);
+        this.correctAnswerMap = res.correctAnswerMap;
+        console.log(this.correctAnswerMap);
       });
     this.needCheck = false;
   }
@@ -133,5 +147,9 @@ export class TestsComponent implements OnInit {
         console.log("RESULT " + this.attemptResult);
         this.attemptResult = res;
       });
+  }
+
+  printEvent($event: Event) {
+    console.log($event);
   }
 }

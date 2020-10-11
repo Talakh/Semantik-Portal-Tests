@@ -5,6 +5,7 @@ export interface AttemptResult {
   correctAnswersCount: number;
   isPassed: boolean;
   percent: number;
+  grade: string;
   branch: BranchChild;
   topicsToRepeat: TopicToRepeat[];
 }

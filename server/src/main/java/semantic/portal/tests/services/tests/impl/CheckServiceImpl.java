@@ -39,7 +39,7 @@ public class CheckServiceImpl implements CheckService {
             case SEVERAL_CORRECT_ANSWER:
                 return checkSeveralCorrectAnswer(test, answer.getAnswerIds());
             case MATCH:
-                return AnswerCheckDto.builder().correctAnswer(checkMatchTest(test, answer)).build();
+                return AnswerCheckDto.builder().correctAnswerMap(checkMatchTest(test, answer)).build();
         }
         throw new EntityNotFoundException("Test with type " + test.getType() + " doesn't exist");
     }

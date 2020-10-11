@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum DifficultLevelEnum {
-    LOW(5,3, 2, 0,0, 2),
-    MEDIUM(2,2, 2, 2,2, 2),
-    HIGH(2,2, 2, 3,3, 2);
+    LOW(5,3, 0, 0,0, 0),
+    MEDIUM(2,2, 0, 2,2, 0),
+    HIGH(0,0, 0, 0,3, 0);
     private int oneAnswerCount;
     private int oneAnswerByDefinitionCount;
     private int demoCodeCount;

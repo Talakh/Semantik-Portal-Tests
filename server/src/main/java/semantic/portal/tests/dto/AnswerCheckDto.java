@@ -13,6 +13,6 @@ public class AnswerCheckDto {
     private boolean isTrue;
     private UUID correctId;
     private List<UUID> correctIds;
-    private Map<UUID, Boolean> correctAnswer;
+    private Map<UUID, Boolean> correctAnswerMap;
 
 }

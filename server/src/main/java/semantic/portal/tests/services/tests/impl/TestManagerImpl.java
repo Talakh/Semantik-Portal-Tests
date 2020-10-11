@@ -1,7 +1,6 @@
 package semantic.portal.tests.services.tests.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import semantic.portal.tests.dto.BranchChildDto;
@@ -9,6 +8,7 @@ import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.TestResultDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.DifficultLevelEnum;
+import semantic.portal.tests.enums.GradeEnum;
 import semantic.portal.tests.model.Attempt;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.repository.AttemptRepository;
@@ -58,13 +58,15 @@ public class TestManagerImpl implements TestManager {
         List<Test> tests = testRepository.findAllByAttemptId(attemptId);
         long questionsCount = tests.size();
         long correctAnswersCount = tests.stream().filter(Test::getAnswerResult).count();
-        double percent = Precision.round((double) correctAnswersCount / (double) questionsCount * 100, 2);
+        long percent = Math.round((double) correctAnswersCount / (double) questionsCount * 100);
+        GradeEnum grade = GradeEnum.getByValue(percent);
 
         TestResultDto resultDto = new TestResultDto();
         resultDto.setQuestionsCount(questionsCount);
         resultDto.setCorrectAnswersCount(correctAnswersCount);
         resultDto.setPercent(percent);
-        resultDto.setPassed(percent > 60);
+        resultDto.setGrade(grade);
+        resultDto.setPassed(grade != GradeEnum.F);
         resultDto.setTopicsToRepeat(getTopicToRepeat(tests));
         return resultDto;
     }

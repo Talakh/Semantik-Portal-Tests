@@ -27,7 +27,9 @@ public class TestController {
     @PutMapping("/check")
     public ResponseEntity<AnswerCheckDto> answer(@RequestBody AnswerDto answer) {
         log.info("Answer: {}", answer);
-        return ResponseEntity.ok(checkService.check(answer));
+        AnswerCheckDto answerDto = checkService.check(answer);
+        log.info("AnswerDto {}", answerDto);
+        return ResponseEntity.ok(answerDto);
     }
 
     @GetMapping("/branches")

@@ -30,8 +30,8 @@ public class OneCorrectAnswerForDemoCodeTestImpl implements SPTest {
         ConceptDto question = possibleConceptsForTest.get(demoCodeTheses.getConceptId());
 
         return Test.builder()
-                .domainUrl(question.getDomain())
-                .domainName(question.getConcept())
+                .domainUrl(Collections.singleton(question.getDomain()))
+                .domainName(Collections.singleton(question.getConcept()))
                 .question(QUESTION_TEMPLATE)
                 .codeInQuestion(demoCodeTheses.getThesis())
                 .answers(getAnswers(question, possibleConceptsForTest))

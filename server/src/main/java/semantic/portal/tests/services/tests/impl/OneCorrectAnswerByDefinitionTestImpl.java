@@ -32,8 +32,8 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
         ConceptDto question = getRandomConcept(possibleConceptsForTest);
         ThesisDTO thesisDTO = getConceptThesis(question.getId(), theses);
         return Test.builder()
-                .domainUrl(question.getDomain())
-                .domainName(question.getConcept())
+                .domainUrl(Collections.singleton(question.getDomain()))
+                .domainName(Collections.singleton(question.getConcept()))
                 .question(String.format(QUESTION_TEMPLATE, thesisDTO.getThesis()))
                 .answers(createAnswers(new ArrayList<>(possibleConceptsForTest.values()), thesisDTO))
                 .type(ONE_CORRECT_ANSWER)

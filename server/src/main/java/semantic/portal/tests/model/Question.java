@@ -26,4 +26,8 @@ public class Question {
 
     @Column(length = 4096)
     private UUID answerId;
+
+    @ManyToOne
+    @JoinColumn()
+    private Test test;
 }

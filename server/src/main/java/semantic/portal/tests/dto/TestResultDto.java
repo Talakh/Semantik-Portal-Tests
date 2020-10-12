@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import semantic.portal.tests.enums.GradeEnum;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class TestResultDto {
@@ -22,7 +23,7 @@ public class TestResultDto {
     @Data
     @EqualsAndHashCode
     public static class TopicToRepeat {
-        private String domainUrl;
-        private String domainName;
+        private Set<String> domainUrl;
+        private Set<String> domainName;
     }
 }

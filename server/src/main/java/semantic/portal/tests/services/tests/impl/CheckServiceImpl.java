@@ -7,7 +7,6 @@ import semantic.portal.tests.dto.AnswerDto;
 import semantic.portal.tests.exception.AnswerNotFoundException;
 import semantic.portal.tests.exception.TestNotFountException;
 import semantic.portal.tests.model.Answer;
-import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.repository.TestRepository;
 import semantic.portal.tests.services.tests.CheckService;
@@ -39,7 +38,7 @@ public class CheckServiceImpl implements CheckService {
             case SEVERAL_CORRECT_ANSWER:
                 return checkSeveralCorrectAnswer(test, answer.getAnswerIds());
             case MATCH:
-                return AnswerCheckDto.builder().correctAnswerMap(checkMatchTest(test, answer)).build();
+                return checkMatchTest(test, answer);
         }
         throw new EntityNotFoundException("Test with type " + test.getType() + " doesn't exist");
     }
@@ -51,28 +50,27 @@ public class CheckServiceImpl implements CheckService {
                 .orElseThrow(AnswerNotFoundException::new);
         AnswerCheckDto answer = AnswerCheckDto.builder()
                 .correctId(correctAnswer.getId())
-                .isTrue(correctAnswer.getId().equals(answerId))
+                .isCorrect(correctAnswer.getId().equals(answerId))
                 .build();
 
         test.setUserAnswerId(answerId);
-        test.setAnswerResult(answer.isTrue());
+        test.setAnswerResult(answer.isCorrect());
         testRepository.save(test);
 
         return answer;
     }
 
-    private Map<UUID, Boolean> checkMatchTest(Test test, AnswerDto answerDto) {
+    private AnswerCheckDto checkMatchTest(Test test, AnswerDto answerDto) {
         Map<UUID, UUID> question2Answer = answerDto.getQuestion2Answer();
-        Map<UUID, Boolean> rightAnswer = new HashMap<>();
-        for (Question question : test.getMatchQuestion()) {
-            for (UUID questionUuid : question2Answer.keySet()) {
-                if (question.getId().equals(questionUuid)) {
-                    if (question.getAnswerId().equals(question2Answer.get(questionUuid)))
-                        rightAnswer.put(questionUuid, true);
-                }
-            }
-        }
-        return rightAnswer;
+        Map<UUID, UUID> rightAnswer = new HashMap<>();
+        test.getMatchQuestion().forEach(question -> {
+            question2Answer.keySet().stream()
+                    .filter(questionUuid -> question.getId().equals(questionUuid))
+                    .filter(questionUuid -> question.getAnswerId().equals(question2Answer.get(questionUuid)))
+                    .forEach(questionUuid -> rightAnswer.put(questionUuid, question2Answer.get(questionUuid)));
+        });
+        testRepository.save(test);
+        return AnswerCheckDto.builder().correctAnswerMap(rightAnswer).build();
     }
 
     private AnswerCheckDto checkSeveralCorrectAnswer(Test test, List<UUID> answerIds) {
@@ -82,11 +80,11 @@ public class CheckServiceImpl implements CheckService {
                 .collect(Collectors.toList());
         AnswerCheckDto answer = AnswerCheckDto.builder()
                 .correctIds(correctAnswerIds)
-                .isTrue(CollectionUtils.isEqualCollection(correctAnswerIds, answerIds))
+                .isCorrect(CollectionUtils.isEqualCollection(correctAnswerIds, answerIds))
                 .build();
 
         test.setUserAnswerIds(answerIds);
-        test.setAnswerResult(answer.isTrue());
+        test.setAnswerResult(answer.isCorrect());
         testRepository.save(test);
 
         return answer;

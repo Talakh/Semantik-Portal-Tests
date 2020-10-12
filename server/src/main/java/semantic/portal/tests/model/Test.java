@@ -8,6 +8,7 @@ import semantic.portal.tests.enums.TestTypeEnum;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -28,14 +29,14 @@ public class Test {
     @Lob
     private String codeInQuestion;
 
-    @Column
-    private String domainUrl;
+    @ElementCollection
+    private Set<String> domainUrl;
 
-    @Column
-    private String domainName;
+    @ElementCollection
+    private Set<String> domainName;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id")
+    @JoinColumn(name = "test")
     private List<Question> matchQuestion;
 
     @Column(length = 4096)

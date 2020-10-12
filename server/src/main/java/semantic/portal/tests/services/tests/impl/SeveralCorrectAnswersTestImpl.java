@@ -29,8 +29,8 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
         ConceptDto question = TestUtils.getRandomConcept(possibleConceptsForTest);
 
         return Test.builder()
-                .domainUrl(question.getDomain())
-                .domainName(question.getConcept())
+                .domainUrl(Collections.singleton(question.getDomain()))
+                .domainName(Collections.singleton(question.getConcept()))
                 .question(String.format(QUESTION_TEMPLATE, question.getConcept()))
                 .answers(getAnswers(question, conceptsWithSeveralAnswers, possibleConceptsForTest, theses))
                 .type(TestTypeEnum.SEVERAL_CORRECT_ANSWER)

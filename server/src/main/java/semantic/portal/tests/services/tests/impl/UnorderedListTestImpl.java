@@ -32,8 +32,8 @@ public class UnorderedListTestImpl implements SPTest {
         ConceptDto question = possibleConceptsForTest.get(conceptId);
 
         return Test.builder()
-                .domainUrl(question.getDomain())
-                .domainName(question.getConcept())
+                .domainUrl(Collections.singleton(question.getDomain()))
+                .domainName(Collections.singleton(question.getConcept()))
                 .question(String.format(QUESTION_TEMPLATE, question.getConcept()))
                 .answers(getAnswers(question, thesesForTest))
                 .type(TestTypeEnum.SEVERAL_CORRECT_ANSWER)

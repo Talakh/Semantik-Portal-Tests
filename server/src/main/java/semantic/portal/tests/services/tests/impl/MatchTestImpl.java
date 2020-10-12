@@ -31,6 +31,8 @@ public class MatchTestImpl implements SPTest {
     }
 
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
+        Set<String> questionNames = new HashSet<>();
+        Set<String> questionUrl = new HashSet<>();
         List<Question> questions = new ArrayList<>();
         List<Answer> answers = new ArrayList<>();
         Map<Integer, ThesisDTO> thesisDTOS = getRandomThesis(theses).stream()
@@ -41,6 +43,8 @@ public class MatchTestImpl implements SPTest {
             rightAnswer.setMatchId(UUID.randomUUID());
             answers.add(rightAnswer);
             Question question = new Question();
+            questionNames.add(rightConceptDto.getConcept());
+            questionUrl.add(rightConceptDto.getDomain());
             question.setAnswerId(rightAnswer.getMatchId());
             question.setQuestion(thesisDTO.getThesis());
             questions.add(question);
@@ -48,8 +52,9 @@ public class MatchTestImpl implements SPTest {
         Collections.shuffle(questions);
         Collections.shuffle(answers);
 
-        // TODO: 04.10.2020 add domainUrl/domainName/question
         return Test.builder()
+                .domainName(questionNames)
+                .domainUrl(questionUrl)
                 .question(QUESTION_TEMPLATE)
                 .matchQuestion(questions)
                 .answers(answers)

@@ -6,4 +6,5 @@ import lombok.Data;
 public class BranchChildDto {
     private String view;
     private String caption;
+    private String image;
 }

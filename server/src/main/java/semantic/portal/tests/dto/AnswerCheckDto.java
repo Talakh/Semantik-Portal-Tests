@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Data
 public class AnswerCheckDto {
-    private boolean isCorrect;
+    private boolean correct;
     private UUID correctId;
     private List<UUID> correctIds;
     private Map<UUID, UUID> correctAnswerMap;

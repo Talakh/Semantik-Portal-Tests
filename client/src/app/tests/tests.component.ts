@@ -102,7 +102,7 @@ export class TestsComponent implements OnInit {
     this.testsService.checkAnswer({"testId": testId, "answerId": this.answerId})
       .subscribe((res) => {
         console.log(res);
-        this.isCorrect = res.isTrue;
+        this.isCorrect = res.correct;
         this.correctAnswerId = res.correctId;
       });
     this.needCheck = false;

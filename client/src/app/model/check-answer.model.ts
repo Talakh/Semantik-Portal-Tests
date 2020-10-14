@@ -1,5 +1,5 @@
 export interface CheckAnswer {
-  isTrue: boolean;
+  correct: boolean;
   correctId: string;
   correctIds: string[];
   correctAnswerMap: {};

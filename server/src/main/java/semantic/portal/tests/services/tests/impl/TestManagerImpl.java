@@ -65,8 +65,8 @@ public class TestManagerImpl implements TestManager {
         resultDto.setQuestionsCount(questionsCount);
         resultDto.setCorrectAnswersCount(correctAnswersCount);
         resultDto.setPercent(percent);
-        resultDto.setGrade(grade);
-        resultDto.setPassed(grade != GradeEnum.F);
+        resultDto.setGrade(grade.name());
+        resultDto.setPassed(grade.isPassed());
         resultDto.setTopicsToRepeat(getTopicToRepeat(tests));
         return resultDto;
     }

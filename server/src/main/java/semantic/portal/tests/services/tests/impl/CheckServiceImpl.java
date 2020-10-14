@@ -50,7 +50,7 @@ public class CheckServiceImpl implements CheckService {
                 .orElseThrow(AnswerNotFoundException::new);
         AnswerCheckDto answer = AnswerCheckDto.builder()
                 .correctId(correctAnswer.getId())
-                .isCorrect(correctAnswer.getId().equals(answerId))
+                .correct(correctAnswer.getId().equals(answerId))
                 .build();
 
         test.setUserAnswerId(answerId);
@@ -80,7 +80,7 @@ public class CheckServiceImpl implements CheckService {
                 .collect(Collectors.toList());
         AnswerCheckDto answer = AnswerCheckDto.builder()
                 .correctIds(correctAnswerIds)
-                .isCorrect(CollectionUtils.isEqualCollection(correctAnswerIds, answerIds))
+                .correct(CollectionUtils.isEqualCollection(correctAnswerIds, answerIds))
                 .build();
 
         test.setUserAnswerIds(answerIds);

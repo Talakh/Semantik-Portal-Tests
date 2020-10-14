@@ -3,7 +3,6 @@ package semantic.portal.tests.dto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import semantic.portal.tests.enums.GradeEnum;
 
 import java.util.List;
 import java.util.Set;
@@ -12,9 +11,9 @@ import java.util.Set;
 public class TestResultDto {
     private long questionsCount;
     private long correctAnswersCount;
-    private boolean isPassed;
+    private boolean passed;
     private double percent;
-    private GradeEnum grade;
+    private String grade;
     private String branch;
     private List<TopicToRepeat> topicsToRepeat;
 

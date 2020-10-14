@@ -17,7 +17,7 @@ import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 
 @Service
 public class SeveralCorrectAnswersTestImpl implements SPTest {
-    private static final String QUESTION_TEMPLATE = "Chose the statement applicable to the concept \"%s\"?";
+    private static final String QUESTION_TEMPLATE = "Choose the statements applicable to the concept \"%s\"?";
     private static final int ANSWERS_COUNT = 4;
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
 

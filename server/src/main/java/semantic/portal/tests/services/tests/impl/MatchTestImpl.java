@@ -22,7 +22,7 @@ import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 @Service
 public class MatchTestImpl implements SPTest {
     private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
-    private static final String QUESTION_TEMPLATE = "Match sentences with the statement \"%s\"?";
+    private static final String QUESTION_TEMPLATE = "Match sentences with the statement.";
     private final ConceptApiService conceptApiService;
 
     @Autowired

@@ -6,9 +6,9 @@
         <img *ngIf="item.image" [src]="item.image"  [alt]="'Course logo for ' + item.caption">
         <span class="label" *ngIf="!item.image">{{item.caption}}</span>
         <div class="btns">
-          <button class="btn" (click)="createTests(item, 'LOW')">EASY</button>
+          <button class="btn" (click)="createTests(item, 'EASY')">EASY</button>
           <button class="btn" (click)="createTests(item, 'MEDIUM')">MEDIUM</button>
-          <button class="btn" (click)="createTests(item, 'HIGH')">HIGH</button>
+          <button class="btn" (click)="createTests(item, 'HARD')">HARD</button>
         </div>
       </div>
     </div>

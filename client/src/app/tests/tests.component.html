@@ -1,24 +1,21 @@
-<div *ngIf="attempt == null" class="container" style="padding-top: 10%;">
-  <div class="row justify-content-center">
-    <mat-form-field appearance="fill" class="col-md-3">
-      <mat-label>Select the subject</mat-label>
-      <mat-select [(ngModel)]="branch">
-        <mat-option *ngFor="let b of branches" [value]="b">{{b.caption}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="col-md-3 col-md-offset-5">
-      <mat-label>Select the difficult level</mat-label>
-      <mat-select [(ngModel)]="difficultLevel">
-        <mat-option value="LOW">Low</mat-option>
-        <mat-option value="MEDIUM">Medium</mat-option>
-        <mat-option value="HIGH">High</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  <div style="padding-top: 10px;" class="row justify-content-center">
-    <button mat-raised-button (click)="createTests()">Create</button>
+<div *ngIf="attempt == null" class="container mt-4">
+  <div class="row" *ngFor="let item of branches">
+    <div class="col-12">
+      <div class="test-item mb-4" [title]="item.caption" [class.bg]="!item.image">
+        <span class="title">{{item.caption}}</span>
+        <img *ngIf="item.image" [src]="item.image"  [alt]="'Course logo for ' + item.caption">
+        <span class="label" *ngIf="!item.image">{{item.caption}}</span>
+        <div class="btns">
+          <button class="btn" (click)="createTests(item, 'LOW')">EASY</button>
+          <button class="btn" (click)="createTests(item, 'MEDIUM')">MEDIUM</button>
+          <button class="btn" (click)="createTests(item, 'HIGH')">HIGH</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+
 <div *ngIf="attempt != null && attempt.tests.length > 0 && attemptResult == null" class="container pt-3">
 
   <mat-progress-bar class="mb-3" mode="determinate" [value]="currentTestIndex / attempt.tests.length * 100"></mat-progress-bar>
@@ -62,7 +59,7 @@
       <div class="row justify-content-center">
         <ol>
           <li class="question row" *ngFor="let q of currentTest.matchQuestion">
-            <div style="width: 600px">{{normalizeText(q.question)}}</div>
+            <div class="match-label">{{normalizeText(q.question)}}</div>
             <mat-form-field appearance="fill" class="col-md-3">
               <mat-label>Select the subject</mat-label>
               <mat-select (valueChange)="answerMap[q.id] = $event">
@@ -88,23 +85,43 @@
     <button mat-raised-button class="btn-custom mt-4" (click)="finish()">Finish</button>
   </div>
 </div>
-<div *ngIf="attemptResult != null" class="container">
-  <h1 class="row justify-content-center">
-    Your result: <span
-    [ngStyle]="{'color' : attemptResult.isPassed ? 'green' : 'red'}">
-      {{attemptResult.correctAnswersCount}}/{{attemptResult.questionsCount}} points ({{attemptResult.percent}}%)
-    </span>
-  </h1>
-  <h2 class="row justify-content-center">
-    Status:
-    <span *ngIf="attemptResult.isPassed" style="color: green">PASSED</span>
-    <span *ngIf="!attemptResult.isPassed" style="color: red">FAILED</span>
-  </h2>
-  <br>
-  <h2 *ngIf="attemptResult.isPassed" class="row justify-content-center">Congratulations, you've successfully passed the
+
+
+
+<!--<span-->
+<!--  [ngStyle]="{'color' : attemptResult.isPassed ? 'green' : 'red'}">-->
+<!--      {{attemptResult.correctAnswersCount}}/{{attemptResult.questionsCount}} points ({{attemptResult.percent}}%)-->
+<!--    </span>-->
+
+<div *ngIf="attemptResult != null" class="container pt-4 results">
+  <div class="row">
+    <div class="col-12 justify-content-start title mb-3">
+      Your result
+    </div>
+  </div>
+  <div class="row score mb-5" [class.failed]="!attemptResult.passed">
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center">
+      <div class="value mb-2">{{attemptResult.questionsCount}}</div>
+      <div class="label">Questions</div>
+    </div>
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center">
+      <div class="value mb-2">{{attemptResult.correctAnswersCount}} ({{attemptResult.percent}}%)</div>
+      <div class="label">Correct answers</div>
+    </div>
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center">
+      <div class="value mb-2">{{attemptResult.grade}}</div>
+      <div class="label">Grade</div>
+    </div>
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center">
+      <div class="value mb-2">{{attemptResult.passed ? 'PASSED' : 'FAILED'}}</div>
+      <div class="label">Status</div>
+    </div>
+  </div>
+
+  <h2 *ngIf="attemptResult.passed" class="row justify-content-center conclusion">Congratulations, you've successfully passed the
     test.</h2>
-  <h2 *ngIf="!attemptResult.isPassed" class="row justify-content-center">You’re almost there… Try it again!</h2>
-  <br>
+  <h2 *ngIf="!attemptResult.passed" class="row justify-content-center conclusion">You’re almost there… Try it again!</h2>
+
   <div *ngIf="attemptResult.topicsToRepeat.length > 0">
     <h3 class="row justify-content-center">Topics to learn</h3>
     <div class="row justify-content-center">

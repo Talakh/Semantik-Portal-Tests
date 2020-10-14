@@ -3,7 +3,7 @@ import {BranchChild} from "./branch-child.model";
 export interface AttemptResult {
   questionsCount: number;
   correctAnswersCount: number;
-  isPassed: boolean;
+  passed: boolean;
   percent: number;
   grade: string;
   branch: BranchChild;

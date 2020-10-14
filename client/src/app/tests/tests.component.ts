@@ -43,12 +43,15 @@ export class TestsComponent implements OnInit {
 
   ngOnInit(): void {
     this.testsService.branches()
-      .subscribe((res) => this.branches = res);
+      .subscribe((res) => {
+        console.log(res)
+        this.branches = res
+      });
   }
 
-  createTests() {
-    console.log("branch " + this.branch + " level " + this.difficultLevel);
-    this.attemptService.create(this.branch, this.difficultLevel)
+  createTests(branch, difficultLevel) {
+    console.log("branch ", branch, " level ", difficultLevel);
+    this.attemptService.create(branch, difficultLevel)
       .pipe(finalize(() => {
         this.currentTestIndex = 0;
         this.currentTest = this.attempt.tests[this.currentTestIndex];
@@ -144,7 +147,7 @@ export class TestsComponent implements OnInit {
   finish() {
     this.attemptService.getResult(this.attempt.attemptId)
       .subscribe((res) => {
-        console.log("RESULT " + this.attemptResult);
+        console.log("RESULT", res);
         this.attemptResult = res;
       });
   }

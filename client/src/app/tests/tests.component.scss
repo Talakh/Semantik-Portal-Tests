@@ -1,3 +1,73 @@
+.test-item{
+  height: 200px;
+  position: relative;
+
+  &.bg{
+    background: linear-gradient(45deg, #1d5fea, #12164e) center;
+    border-radius: 10px;
+  }
+
+  .title{
+    position: absolute;
+    z-index: 1;
+    right: 10px;
+    top: 10px;
+    color: white;
+    padding: 10px;
+    background: #00000047;
+    font-size: 20px;
+    border-radius: 10px;
+  }
+
+  img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .label{
+    color: white;
+    font-size: 70px;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: CURSIVE, cursive;
+  }
+
+  .btns{
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 30px;
+
+    .btn{
+      border: 1px solid white;
+      background: linear-gradient(216deg, #3e3e3e66, #7b7a7a9c);
+      color: white;
+      width: 120px;
+      transition: 100ms;
+
+      &:hover{
+        box-shadow: 0 2px 5px black;
+      }
+
+      &:active{
+        transform: translateY(2px);
+      }
+    }
+  }
+}
+
+
 a {
   text-decoration: none;
 }
@@ -12,6 +82,15 @@ a {
     background: #50505021;
     padding: 15px;
     border-radius: 10px;
+  }
+
+  .match-label{
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 15px;
   }
 }
 
@@ -29,12 +108,39 @@ a {
   }
 }
 
-.wrong-answer{
-  background: #f55353ab;
-}
+.results{
 
-.correct-answer{
-  background: #67f362a8;
+  .title{
+    font-size: 26px;
+  }
+
+  .score{
+    height: 200px;
+    background: linear-gradient(45deg, #caffbf, #c8fff3);
+    border-radius: 10px;
+
+    .value{
+      color: #44982fa8;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .label{
+      font-size: 20px;
+      color: #434343;
+    }
+
+    &.failed{
+      background: linear-gradient(45deg, #ffbfbf, #ffc8da) ;
+      .value{
+        color: #f55353ab;
+      }
+    }
+  }
+
+  .conclusion{
+    color: #6f6f6f;
+  }
 }
 
 .btn-custom{

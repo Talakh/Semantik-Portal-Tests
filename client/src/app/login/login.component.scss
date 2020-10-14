@@ -1,7 +1,14 @@
 :host {
     display: flex;
     justify-content: center;
-    margin: 100px 0px;
+    height: 100%;
+  align-items: center;
+  background: linear-gradient(130deg, #1f91f9, #2cfdc0bf);
+}
+
+.login-form{
+  height: min-content;
+  margin-top: -175px;
 }
 
 .mat-form-field {

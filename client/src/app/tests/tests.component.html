@@ -67,7 +67,7 @@
               <mat-label>Select the subject</mat-label>
               <mat-select (valueChange)="answerMap[q.id] = $event">
                 <mat-option *ngFor="let a of currentTest.answers"
-                            [value]="a.id">
+                            [value]="a.matchId">
                   {{normalizeText(a.answer)}}
                 </mat-option>
               </mat-select>

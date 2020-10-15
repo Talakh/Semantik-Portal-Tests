@@ -7,6 +7,7 @@ import semantic.portal.tests.dto.AnswerDto;
 import semantic.portal.tests.exception.AnswerNotFoundException;
 import semantic.portal.tests.exception.TestNotFountException;
 import semantic.portal.tests.model.Answer;
+import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.repository.TestRepository;
 import semantic.portal.tests.services.tests.CheckService;
@@ -62,13 +63,13 @@ public class CheckServiceImpl implements CheckService {
 
     private AnswerCheckDto checkMatchTest(Test test, AnswerDto answerDto) {
         Map<UUID, UUID> question2Answer = answerDto.getQuestion2Answer();
-        Map<UUID, UUID> rightAnswer = new HashMap<>();
-        test.getMatchQuestion().forEach(question -> {
-            question2Answer.keySet().stream()
-                    .filter(questionUuid -> question.getId().equals(questionUuid))
-                    .forEach(questionUuid -> rightAnswer.put(questionUuid, question2Answer.get(questionUuid)));
-        });
+        Map<UUID, UUID> rightAnswer = test.getMatchQuestion()
+                .stream()
+                .collect(Collectors.toMap(Question::getId, Question::getAnswerId));
+        test.setAnswerResult(question2Answer.equals(rightAnswer));
+        test.setUserAnswers(answerDto.getQuestion2Answer());
         testRepository.save(test);
+
         return AnswerCheckDto.builder().correctAnswerMap(rightAnswer).build();
     }
 

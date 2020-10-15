@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import semantic.portal.tests.enums.TestTypeEnum;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Builder
@@ -49,6 +47,10 @@ public class Test {
 
     @Column
     private UUID userAnswerId;
+
+    @ElementCollection
+    @MapKeyColumn(name="question2Answer")
+    private Map<UUID, UUID> userAnswers;
 
     @ElementCollection
     private List<UUID> userAnswerIds;

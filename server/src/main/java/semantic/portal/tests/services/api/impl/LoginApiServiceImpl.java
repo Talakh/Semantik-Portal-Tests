@@ -4,10 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import semantic.portal.tests.security.SemanticLoginDto;
+import semantic.portal.tests.services.api.LoginApiService;
 
 @Service
 @Slf4j
-public class LoginApiServiceImpl {
+public class LoginApiServiceImpl implements LoginApiService {
 
     private final WebClient webClient;
 
@@ -15,7 +16,7 @@ public class LoginApiServiceImpl {
         this.webClient = webClient;
     }
 
-
+    @Override
     public SemanticLoginDto getSemanticLogin(String login, String psw) {
         return webClient
                 .post()

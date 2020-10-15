@@ -66,7 +66,6 @@ public class CheckServiceImpl implements CheckService {
         test.getMatchQuestion().forEach(question -> {
             question2Answer.keySet().stream()
                     .filter(questionUuid -> question.getId().equals(questionUuid))
-                    .filter(questionUuid -> question.getAnswerId().equals(question2Answer.get(questionUuid)))
                     .forEach(questionUuid -> rightAnswer.put(questionUuid, question2Answer.get(questionUuid)));
         });
         testRepository.save(test);

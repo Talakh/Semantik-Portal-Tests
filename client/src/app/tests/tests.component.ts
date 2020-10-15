@@ -93,7 +93,7 @@ export class TestsComponent implements OnInit {
       this.checkOneAnswer(testId);
     } else if (this.currentTest.type === this.testTypes.SEVERAL_CORRECT_ANSWER) {
       this.checkSeveralAnswer(testId);
-    } else if(this.currentTest.type === this.testTypes.MATCH) {
+    } else if (this.currentTest.type === this.testTypes.MATCH) {
       this.checkMapAnswer(testId);
     }
   }
@@ -118,7 +118,7 @@ export class TestsComponent implements OnInit {
   }
 
   private checkMapAnswer(testId: string) {
-    console.log("answerMap: " , this.answerMap);
+    console.log("answerMap: ", this.answerMap);
     this.testsService.checkAnswer({"testId": testId, "question2Answer": this.answerMap})
       .subscribe((res) => {
         console.log(res);
@@ -154,5 +154,12 @@ export class TestsComponent implements OnInit {
 
   printEvent($event: Event) {
     console.log($event);
+  }
+
+  getAnswerByQuestionId(questionId: string): string {
+    return this.currentTest.answers
+      .filter(a => a.matchId == this.correctAnswerMap[questionId])
+      .map(a => a.answer)
+      .pop();
   }
 }

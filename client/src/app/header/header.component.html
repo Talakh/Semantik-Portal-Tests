@@ -6,6 +6,7 @@
       <li><a *ngIf="loginService.isUserLoggedIn()" routerLink="/addUser" class="nav-link">Add New User</a></li>
       <li><a *ngIf="!loginService.isUserLoggedIn()" routerLink="/login" class="nav-link">Login</a></li>
       <li><a *ngIf="loginService.isUserLoggedIn()" routerLink="/logout" class="nav-link">LogOut</a></li>
+      <li><a *ngIf="loginService.isUserLoggedIn()" routerLink="/tests" class="nav-link">Tests</a></li>
     </ul>
 
   </nav>

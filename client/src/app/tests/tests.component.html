@@ -59,7 +59,11 @@
       <div class="row justify-content-center">
         <ol>
           <li class="question row" *ngFor="let q of currentTest.matchQuestion">
-            <div class="match-label">{{normalizeText(q.question)}}</div>
+            <div class="match-label"
+                 [class.wrong-answer] = '(!needCheck && answerMap[q.id] !== correctAnswerMap[q.id])'
+                 [class.correct-answer] = '(!needCheck && answerMap[q.id] == correctAnswerMap[q.id])'>
+              {{normalizeText(q.question)}}
+            </div>
             <mat-form-field appearance="fill" class="col-md-3">
               <mat-label>Select the subject</mat-label>
               <mat-select (valueChange)="answerMap[q.id] = $event">
@@ -69,6 +73,9 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <div *ngIf="!needCheck && answerMap[q.id] !== correctAnswerMap[q.id]"
+                 [innerText]="getAnswerByQuestionId(q.id)">
+            </div>
           </li>
         </ol>
       </div>

@@ -1,6 +1,5 @@
 package semantic.portal.tests.services.tests.impl;
 
-import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
@@ -14,18 +13,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static semantic.portal.tests.enums.ThesesClassEnum.LIST_ITEM;
-
 @Service
 public class UnorderedListTestImpl implements SPTest {
     private static final int LIST_GROUPS = 3;
     private static final String QUESTION_TEMPLATE = "Which statements is the most applicable to the concept \"%s\"?";
-    private static final List<String> thesesTypesForAnswer = Lists.newArrayList(LIST_ITEM.getValue());
 
     @Override
-    public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
-        Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(concepts, theses);
-        Map<Integer, List<ThesisDTO>> demoCodeTheses = getDemoCodeThesisForAnswer(possibleConceptsForTest, theses);
+    public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {
+        Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(concepts, theses, thesesTypesForAnswer);
+        Map<Integer, List<ThesisDTO>> demoCodeTheses = getDemoCodeThesisForAnswer(possibleConceptsForTest, theses, thesesTypesForAnswer);
         Map<Integer, List<ThesisDTO>> thesesForTest = getThesesMapForTest(demoCodeTheses);
 
         Integer conceptId = TestUtils.getRandomKey(thesesForTest);
@@ -40,7 +36,7 @@ public class UnorderedListTestImpl implements SPTest {
                 .build();
     }
 
-    private Map<Integer, ConceptDto> filterPossibleConcepts(List<ConceptDto> concepts, List<ThesisDTO> theses) {
+    private Map<Integer, ConceptDto> filterPossibleConcepts(List<ConceptDto> concepts, List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {
         List<Integer> possibleConcepts = theses.stream()
                 .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
                 .filter(t -> Objects.isNull(t.getToThesisId()))
@@ -54,7 +50,8 @@ public class UnorderedListTestImpl implements SPTest {
     }
 
     private Map<Integer, List<ThesisDTO>> getDemoCodeThesisForAnswer(Map<Integer, ConceptDto> conceptMap,
-                                                                     List<ThesisDTO> theses) {
+                                                                     List<ThesisDTO> theses,
+                                                                     List<String> thesesTypesForAnswer) {
         return theses.stream()
                 .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
                 .filter(t -> Objects.isNull(t.getToThesisId()))

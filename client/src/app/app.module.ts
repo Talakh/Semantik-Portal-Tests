@@ -25,6 +25,8 @@ import {MatRadioModule} from "@angular/material/radio";
 import {HeaderComponent} from "./header/header.component";
 import {FooterComponent} from "./footer/footer.component";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { DifficultLevelComponent } from './difficult-level/difficult-level.component';
+import {DifficultLevelService} from "./service/difficult-level.service";
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     AddUserComponent,
     HeaderComponent,
     FooterComponent,
+    DifficultLevelComponent,
 
   ],
     imports: [
@@ -58,6 +61,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
   providers: [
     TestsService,
     AttemptService,
+    DifficultLevelService,
     [ { provide: HTTP_INTERCEPTORS, useClass: BasicAuthHtppInterceptorService, multi: true }],
   ],
   bootstrap: [AppComponent]

@@ -1,6 +1,5 @@
 package semantic.portal.tests.services.tests.impl;
 
-import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
@@ -14,17 +13,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static semantic.portal.tests.enums.ThesesClassEnum.DEMO_CODE;
-import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 
 @Service
 public class OneCorrectAnswerForDemoCodeTestImpl implements SPTest {
     private static final int ANSWERS_COUNT = 4;
     private static final String QUESTION_TEMPLATE = "The purpose of which concept describes the demo code?";
-    private static final List<String> thesesTypesForAnswer = Lists.newArrayList(DEMO_CODE.getValue(),
-            ESSENCE.getValue());
 
     @Override
-    public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
+    public Test create(List<ConceptDto> concepts,
+                       List<ThesisDTO> theses,
+                       List<String> thesesTypesForAnswer) {
         Map<Integer, ConceptDto> possibleConceptsForTest = TestUtils.filterPossibleConcepts(thesesTypesForAnswer ,concepts, theses);
         ThesisDTO demoCodeTheses = getDemoCodeThesisForAnswer(possibleConceptsForTest, theses);
         ConceptDto question = possibleConceptsForTest.get(demoCodeTheses.getConceptId());

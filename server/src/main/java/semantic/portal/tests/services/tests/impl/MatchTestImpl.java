@@ -1,6 +1,5 @@
 package semantic.portal.tests.services.tests.impl;
 
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
@@ -17,11 +16,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
-
 @Service
 public class MatchTestImpl implements SPTest {
-    private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
     private static final String QUESTION_TEMPLATE = "Match sentences with the statement.";
     private final ConceptApiService conceptApiService;
 
@@ -30,12 +26,14 @@ public class MatchTestImpl implements SPTest {
         this.conceptApiService = conceptApiService;
     }
 
-    public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
+    public Test create(List<ConceptDto> concepts,
+                       List<ThesisDTO> theses,
+                       List<String> thesesTypesForAnswer) {
         Set<String> questionNames = new HashSet<>();
         Set<String> questionUrl = new HashSet<>();
         List<Question> questions = new ArrayList<>();
         List<Answer> answers = new ArrayList<>();
-        Map<Integer, ThesisDTO> thesisDTOS = getRandomThesis(theses).stream()
+        Map<Integer, ThesisDTO> thesisDTOS = getRandomThesis(theses, thesesTypesForAnswer).stream()
                 .collect(Collectors.toMap(ThesisDTO::getConceptId, thesisDTO -> thesisDTO, (a, b) -> a));
         thesisDTOS.values().forEach(thesisDTO -> {
             ConceptDto rightConceptDto = conceptApiService.getConceptById(thesisDTO.getConceptId());
@@ -62,7 +60,7 @@ public class MatchTestImpl implements SPTest {
                 .build();
     }
 
-    private List<ThesisDTO> getRandomThesis(List<ThesisDTO> theses) {
+    private List<ThesisDTO> getRandomThesis(List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {
         return IntStream.range(0, theses.size())
                 .mapToObj(i -> TestUtils.getRandomThesis(theses))
                 .filter(thesisDTO -> thesesTypesForAnswer.contains(thesisDTO.getClazz()))

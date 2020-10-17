@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface SPTest {
 
-    Test create(List<ConceptDto> concepts, List<ThesisDTO> theses);
+    Test create(List<ConceptDto> concepts, List<ThesisDTO> theses, List<String> thesesTypesForAnswer);
 }

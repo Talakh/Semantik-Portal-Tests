@@ -1,6 +1,5 @@
 package semantic.portal.tests.services.tests.impl;
 
-import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
@@ -13,17 +12,15 @@ import semantic.portal.tests.utils.TestUtils;
 import java.util.*;
 
 import static java.util.stream.Collectors.*;
-import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
 
 @Service
 public class SeveralCorrectAnswersTestImpl implements SPTest {
     private static final String QUESTION_TEMPLATE = "Choose the statements applicable to the concept \"%s\"?";
     private static final int ANSWERS_COUNT = 4;
-    private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
 
     @Override
-    public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
-        Map<Integer, List<ThesisDTO>> conceptsWithSeveralAnswers = filterConceptsWithSeveralAnswers(theses);
+    public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {
+        Map<Integer, List<ThesisDTO>> conceptsWithSeveralAnswers = filterConceptsWithSeveralAnswers(theses, thesesTypesForAnswer);
         Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(concepts, conceptsWithSeveralAnswers.keySet());
 
         ConceptDto question = TestUtils.getRandomConcept(possibleConceptsForTest);
@@ -37,7 +34,7 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
                 .build();
     }
 
-    private Map<Integer, List<ThesisDTO>> filterConceptsWithSeveralAnswers(List<ThesisDTO> theses) {
+    private Map<Integer, List<ThesisDTO>> filterConceptsWithSeveralAnswers(List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {
         return theses.stream()
                 .filter(t -> Objects.isNull(t.getToThesisId()))
                 .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))

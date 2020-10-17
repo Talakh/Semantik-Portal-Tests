@@ -14,8 +14,8 @@ class OrderedListTestImplTest {
 
     @Test
     void name() {
-        semantic.portal.tests.model.Test test = unorderedListTest.create(branchApiService.getConcepts("java"),
-                branchApiService.getTheses("java"));
-        System.out.println(test);
+//        semantic.portal.tests.model.Test test = unorderedListTest.create(branchApiService.getConcepts("java"),
+//                branchApiService.getTheses("java"));
+//        System.out.println(test);
     }
 }

@@ -1,0 +1,25 @@
+<h1>Levels</h1>
+<ol>
+  <li *ngFor="let level of levels">
+    <p>{{level.testDifficultId}}</p>
+    <p>{{level.oneAnswerCount}}</p>
+    <p>{{level.oneAnswerThesisTypes}}</p>
+    <p>{{level.oneAnswerByDefinitionCount}}</p>
+    <p>{{level.oneAnswerByDefinitionThesisTypes}}</p>
+    <p>{{level.severalAnswerCount}}</p>
+    <p>{{level.severalAnswerThesisTypes}}</p>
+    <p>{{level.demoCodeCount}}</p>
+    <p>{{level.demoCodeThesisTypes}}</p>
+    <p>{{level.matchCount}}</p>
+    <p>{{level.matchThesisTypes}}</p>
+    <p>{{level.unorderedListCount}}</p>
+    <p>{{level.unorderedListThesisTypes}}</p>
+    <hr>
+  </li>
+</ol>
+<h1>TheseClasses</h1>
+<ol>
+  <li *ngFor="let clazz of theseClasses">
+    {{clazz.value}} - {{clazz.desc}}
+  </li>
+</ol>

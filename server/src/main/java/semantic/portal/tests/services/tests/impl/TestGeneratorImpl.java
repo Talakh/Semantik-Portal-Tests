@@ -7,7 +7,9 @@ import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.DifficultLevelEnum;
 import semantic.portal.tests.model.Test;
+import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.tests.SPTest;
+import semantic.portal.tests.services.tests.TestDifficultLevelService;
 import semantic.portal.tests.services.tests.TestGenerator;
 
 import java.util.ArrayList;
@@ -22,41 +24,45 @@ public class TestGeneratorImpl implements TestGenerator {
     private final SPTest severalCorrectAnswers;
     private final SPTest match;
     private final SPTest unorderedList;
+    private final TestDifficultLevelService testDifficultLevelService;
 
     public TestGeneratorImpl(@Qualifier("oneCorrectAnswerTestImpl") SPTest oneCorrectAnswer,
                              @Qualifier("oneCorrectAnswerByDefinitionTestImpl") SPTest oneCorrectAnswerByDefinition,
                              @Qualifier("oneCorrectAnswerForDemoCodeTestImpl") SPTest oneCorrectAnswerForDemoCode,
                              @Qualifier("severalCorrectAnswersTestImpl") SPTest severalCorrectAnswers,
                              @Qualifier("matchTestImpl") SPTest match,
-                             @Qualifier("unorderedListTestImpl") SPTest unorderedList) {
+                             @Qualifier("unorderedListTestImpl") SPTest unorderedList,
+                             TestDifficultLevelService testDifficultLevelService) {
         this.severalCorrectAnswers = severalCorrectAnswers;
         this.oneCorrectAnswer = oneCorrectAnswer;
         this.oneCorrectAnswerByDefinition = oneCorrectAnswerByDefinition;
         this.oneCorrectAnswerForDemoCode = oneCorrectAnswerForDemoCode;
         this.match = match;
         this.unorderedList = unorderedList;
+        this.testDifficultLevelService = testDifficultLevelService;
     }
 
     @Override
     public List<Test> generate(List<ConceptDto> concepts, List<ThesisDTO> theses, DifficultLevelEnum difficult) {
         List<Test> tests = new ArrayList<>();
-        for (int i = 0; i < difficult.getOneAnswerCount(); i++) {
-            tests.add(oneCorrectAnswer.create(concepts, theses));
+        TestDifficultLevel difficultLevel = testDifficultLevelService.getTestDifficultLevel(difficult);
+        for (int i = 0; i < difficultLevel.getOneAnswerCount(); i++) {
+            tests.add(oneCorrectAnswer.create(concepts, theses, difficultLevel.getOneAnswerThesisTypes()));
         }
-        for (int i = 0; i < difficult.getOneAnswerByDefinitionCount(); i++) {
-            tests.add(oneCorrectAnswerByDefinition.create(concepts, theses));
+        for (int i = 0; i < difficultLevel.getOneAnswerByDefinitionCount(); i++) {
+            tests.add(oneCorrectAnswerByDefinition.create(concepts, theses, difficultLevel.getOneAnswerByDefinitionThesisTypes()));
         }
-        for (int i = 0; i < difficult.getDemoCodeCount(); i++) {
-            tests.add(oneCorrectAnswerForDemoCode.create(concepts, theses));
+        for (int i = 0; i < difficultLevel.getDemoCodeCount(); i++) {
+            tests.add(oneCorrectAnswerForDemoCode.create(concepts, theses, difficultLevel.getDemoCodeThesisTypes()));
         }
-        for (int i = 0; i < difficult.getSeveralAnswerCount(); i++) {
-            tests.add(severalCorrectAnswers.create(concepts, theses));
+        for (int i = 0; i < difficultLevel.getSeveralAnswerCount(); i++) {
+            tests.add(severalCorrectAnswers.create(concepts, theses, difficultLevel.getSeveralAnswerThesisTypes()));
         }
-        for (int i = 0; i < difficult.getMatchCount(); i++) {
-            tests.add(match.create(concepts, theses));
+        for (int i = 0; i < difficultLevel.getMatchCount(); i++) {
+            tests.add(match.create(concepts, theses, difficultLevel.getMatchThesisTypes()));
         }
-        for (int i = 0; i < difficult.getUnorderedListCount(); i++) {
-            tests.add(unorderedList.create(concepts, theses));
+        for (int i = 0; i < difficultLevel.getUnorderedListCount(); i++) {
+            tests.add(unorderedList.create(concepts, theses, difficultLevel.getUnorderedListThesisTypes()));
         }
         return tests;
     }

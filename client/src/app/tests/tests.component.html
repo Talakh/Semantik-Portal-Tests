@@ -58,24 +58,28 @@
     <div *ngIf="currentTest.type == testTypes.MATCH">
       <div class="row justify-content-center">
         <ol>
-          <li class="question row" *ngFor="let q of currentTest.matchQuestion">
+          <li class="question row mb-3" *ngFor="let q of currentTest.matchQuestion">
             <div class="match-label"
                  [class.wrong-answer] = '(!needCheck && answerMap[q.id] !== correctAnswerMap[q.id])'
                  [class.correct-answer] = '(!needCheck && answerMap[q.id] == correctAnswerMap[q.id])'>
               {{normalizeText(q.question)}}
             </div>
-            <mat-form-field appearance="fill" class="col-md-3">
-              <mat-label>Select the subject</mat-label>
-              <mat-select (valueChange)="answerMap[q.id] = $event">
-                <mat-option *ngFor="let a of currentTest.answers"
-                            [value]="a.matchId">
-                  {{normalizeText(a.answer)}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div *ngIf="!needCheck && answerMap[q.id] !== correctAnswerMap[q.id]"
-                 [innerText]="getAnswerByQuestionId(q.id)">
+            <div class="d-flex flex-column justify-content-around align-items-center ml-2">
+              <div *ngIf="!needCheck && answerMap[q.id] !== correctAnswerMap[q.id]"
+                   class="correct-match"
+                   [innerText]="getAnswerByQuestionId(q.id)">
+              </div>
+              <mat-form-field appearance="fill" [class.blocked]="!needCheck">
+                <mat-label>Select the subject</mat-label>
+                <mat-select (valueChange)="answerMap[q.id] = $event">
+                  <mat-option *ngFor="let a of currentTest.answers"
+                              [value]="a.matchId">
+                    {{normalizeText(a.answer)}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
+
           </li>
         </ol>
       </div>

@@ -1,22 +1,70 @@
-<h1>Levels</h1>
-<ol>
-  <li *ngFor="let level of levels">
-    <p>{{level.testDifficultId}}</p>
-    <p>{{level.oneAnswerCount}}</p>
-    <p>{{level.oneAnswerThesisTypes}}</p>
-    <p>{{level.oneAnswerByDefinitionCount}}</p>
-    <p>{{level.oneAnswerByDefinitionThesisTypes}}</p>
-    <p>{{level.severalAnswerCount}}</p>
-    <p>{{level.severalAnswerThesisTypes}}</p>
-    <p>{{level.demoCodeCount}}</p>
-    <p>{{level.demoCodeThesisTypes}}</p>
-    <p>{{level.matchCount}}</p>
-    <p>{{level.matchThesisTypes}}</p>
-    <p>{{level.unorderedListCount}}</p>
-    <p>{{level.unorderedListThesisTypes}}</p>
-    <hr>
-  </li>
-</ol>
+<div class="container-fluid p-4">
+  <div class="row">
+    <h1 class="col-12 title">
+      Levels
+    </h1>
+  </div>
+  <div class="row test-data" *ngFor="let level of levels">
+    <h2 class="col-12">
+      {{level.testDifficultId}}
+    </h2>
+    <div class="col-12">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">One answer questions</span>
+        </div>
+        <input type="number" class="form-control" [(ngModel)]="level.oneAnswerCount">
+        <input type="text" class="form-control" [(ngModel)]="level.oneAnswerThesisTypes">
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">One answer by definition questions</span>
+        </div>
+        <input type="number" class="form-control" [(ngModel)]="level.oneAnswerByDefinitionCount">
+        <input type="text" class="form-control" [(ngModel)]="level.oneAnswerByDefinitionThesisTypes">
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Several answer questions</span>
+        </div>
+        <input type="number" class="form-control" [(ngModel)]="level.severalAnswerCount">
+        <input type="text" class="form-control" [(ngModel)]="level.severalAnswerThesisTypes">
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Demo code questions</span>
+        </div>
+        <input type="number" class="form-control" [(ngModel)]="level.demoCodeCount">
+        <input type="text" class="form-control" [(ngModel)]="level.demoCodeThesisTypes">
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Match questions</span>
+        </div>
+        <input type="number" class="form-control" [(ngModel)]="level.matchCount">
+        <input type="text" class="form-control" [(ngModel)]="level.matchThesisTypes">
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Unordered list questions</span>
+        </div>
+        <input type="number" class="form-control" [(ngModel)]="level.unorderedListCount">
+        <input type="text" class="form-control" [(ngModel)]="level.unorderedListThesisTypes">
+      </div>
+    </div>
+  </div>
+</div>
+
 <h1>TheseClasses</h1>
 <ol>
   <li *ngFor="let clazz of theseClasses">

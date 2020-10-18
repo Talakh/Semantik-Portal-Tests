@@ -11,14 +11,6 @@ export interface AttemptResult {
 }
 
 export interface TopicToRepeat {
-  domainUrl: DomainUrl[];
-  domainName: DomainName[];
-}
-
-export interface DomainName {
-  domainName: string;
-}
-
-export interface DomainUrl {
   domainUrl: string;
+  domainName: string;
 }

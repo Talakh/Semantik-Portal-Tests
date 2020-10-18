@@ -18,7 +18,7 @@ import static semantic.portal.tests.enums.ThesesClassEnum.*;
 
 @Service
 public class TestDifficultLevelServiceImpl implements TestDifficultLevelService {
-    private static Map<DifficultLevelEnum, TestDifficultLevel> levelsMap = new HashMap<>();
+    private Map<DifficultLevelEnum, TestDifficultLevel> levelsMap = new HashMap<>();
 
     private final TestDifficultLevelRepository testDifficultLevelRepository;
 
@@ -62,9 +62,9 @@ public class TestDifficultLevelServiceImpl implements TestDifficultLevelService 
                 .oneAnswerThesisTypes(Lists.newArrayList(ESSENCE.getValue()))
                 .oneAnswerByDefinitionCount(3)
                 .oneAnswerByDefinitionThesisTypes(Lists.newArrayList(ESSENCE.getValue()))
-                .severalAnswerCount(0)
+                .severalAnswerCount(5)
                 .severalAnswerThesisTypes(Lists.newArrayList(ESSENCE.getValue()))
-                .matchCount(0)
+                .matchCount(4)
                 .matchThesisTypes(Lists.newArrayList(ESSENCE.getValue()))
                 .demoCodeCount(0)
                 .demoCodeThesisTypes(Lists.newArrayList(DEMO_CODE.getValue(), ESSENCE.getValue()))

@@ -6,12 +6,15 @@ import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Test;
+import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.tests.SPTest;
 import semantic.portal.tests.utils.TestUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static semantic.portal.tests.utils.TestUtils.filterPossibleConcepts;
 
 @Service
 public class UnorderedListTestImpl implements SPTest {
@@ -20,9 +23,11 @@ public class UnorderedListTestImpl implements SPTest {
 
     @Override
     public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {
-        Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(concepts, theses, thesesTypesForAnswer);
-        Map<Integer, List<ThesisDTO>> demoCodeTheses = getDemoCodeThesisForAnswer(possibleConceptsForTest, theses, thesesTypesForAnswer);
-        Map<Integer, List<ThesisDTO>> thesesForTest = getThesesMapForTest(demoCodeTheses);
+        Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(thesesTypesForAnswer, concepts,
+                theses);
+        Map<Integer, List<ThesisDTO>> thesesForAnswer = getThesisForAnswer(possibleConceptsForTest, theses,
+                thesesTypesForAnswer);
+        Map<Integer, List<ThesisDTO>> thesesForTest = getThesesMapForTest(thesesForAnswer);
 
         Integer conceptId = TestUtils.getRandomKey(thesesForTest);
         ConceptDto question = possibleConceptsForTest.get(conceptId);
@@ -36,22 +41,24 @@ public class UnorderedListTestImpl implements SPTest {
                 .build();
     }
 
-    private Map<Integer, ConceptDto> filterPossibleConcepts(List<ConceptDto> concepts, List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {
-        List<Integer> possibleConcepts = theses.stream()
-                .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
-                .filter(t -> Objects.isNull(t.getToThesisId()))
-                .map(ThesisDTO::getConceptId)
-                .collect(Collectors.toList());
-
-        return concepts.stream()
-                .filter(conceptDto -> conceptDto.getIsAspect() == 0)
-                .filter(conceptDto -> possibleConcepts.contains(conceptDto.getId()))
-                .collect(Collectors.toMap(ConceptDto::getId, c -> c));
+    @Override
+    public boolean isEnoughTheses(List<ConceptDto> concepts,
+                                  List<ThesisDTO> theses,
+                                  TestDifficultLevel level) {
+        if (level.getUnorderedListCount() <= 0) {
+            return true;
+        } else {
+            Map<Integer, ConceptDto> possibleConceptsForTest =
+                    filterPossibleConcepts(level.getUnorderedListThesisTypes(), concepts, theses);
+            Map<Integer, List<ThesisDTO>> thesesForAnswer =
+                    getThesisForAnswer(possibleConceptsForTest, theses, level.getUnorderedListThesisTypes());
+            return thesesForAnswer.size() >= 2;
+        }
     }
 
-    private Map<Integer, List<ThesisDTO>> getDemoCodeThesisForAnswer(Map<Integer, ConceptDto> conceptMap,
-                                                                     List<ThesisDTO> theses,
-                                                                     List<String> thesesTypesForAnswer) {
+    private Map<Integer, List<ThesisDTO>> getThesisForAnswer(Map<Integer, ConceptDto> conceptMap,
+                                                             List<ThesisDTO> theses,
+                                                             List<String> thesesTypesForAnswer) {
         return theses.stream()
                 .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
                 .filter(t -> Objects.isNull(t.getToThesisId()))

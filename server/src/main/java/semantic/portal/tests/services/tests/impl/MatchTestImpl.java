@@ -8,6 +8,7 @@ import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
+import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.api.ConceptApiService;
 import semantic.portal.tests.services.tests.SPTest;
 import semantic.portal.tests.utils.TestUtils;
@@ -58,6 +59,19 @@ public class MatchTestImpl implements SPTest {
                 .answers(answers)
                 .type(TestTypeEnum.MATCH)
                 .build();
+    }
+
+    @Override
+    public boolean isEnoughTheses(List<ConceptDto> concepts,
+                                  List<ThesisDTO> theses,
+                                  TestDifficultLevel level) {
+        if (level.getMatchCount() <= 0) {
+            return true;
+        } else {
+            return theses.stream()
+                    .filter(thesisDTO -> level.getMatchThesisTypes().contains(thesisDTO.getClazz()))
+                    .count() >= 4;
+        }
     }
 
     private List<ThesisDTO> getRandomThesis(List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {

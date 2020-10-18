@@ -6,13 +6,15 @@ import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Test;
+import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.tests.SPTest;
-import semantic.portal.tests.utils.TestUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static semantic.portal.tests.enums.ThesesClassEnum.DEMO_CODE;
+import static semantic.portal.tests.utils.TestUtils.filterPossibleConcepts;
+import static semantic.portal.tests.utils.TestUtils.getRandomThesis;
 
 @Service
 public class OneCorrectAnswerForDemoCodeTestImpl implements SPTest {
@@ -23,8 +25,10 @@ public class OneCorrectAnswerForDemoCodeTestImpl implements SPTest {
     public Test create(List<ConceptDto> concepts,
                        List<ThesisDTO> theses,
                        List<String> thesesTypesForAnswer) {
-        Map<Integer, ConceptDto> possibleConceptsForTest = TestUtils.filterPossibleConcepts(thesesTypesForAnswer ,concepts, theses);
-        ThesisDTO demoCodeTheses = getDemoCodeThesisForAnswer(possibleConceptsForTest, theses);
+        Map<Integer, ConceptDto> possibleConceptsForTest =
+                filterPossibleConcepts(thesesTypesForAnswer, concepts, theses);
+        List<ThesisDTO> possibleThesisForTest = getDemoCodeThesisForAnswer(possibleConceptsForTest, theses);
+        ThesisDTO demoCodeTheses = getRandomThesis(possibleThesisForTest);
         ConceptDto question = possibleConceptsForTest.get(demoCodeTheses.getConceptId());
 
         return Test.builder()
@@ -37,15 +41,27 @@ public class OneCorrectAnswerForDemoCodeTestImpl implements SPTest {
                 .build();
     }
 
+    @Override
+    public boolean isEnoughTheses(List<ConceptDto> concepts,
+                                  List<ThesisDTO> theses,
+                                  TestDifficultLevel level) {
+        if (level.getDemoCodeCount() <= 0) {
+            return true;
+        } else {
+            Map<Integer, ConceptDto> possibleConceptsForTest =
+                    filterPossibleConcepts(level.getDemoCodeThesisTypes(), concepts, theses);
+            List<ThesisDTO> demoCodeTheses = getDemoCodeThesisForAnswer(possibleConceptsForTest, theses);
+            return !demoCodeTheses.isEmpty();
+        }
+    }
 
-    private ThesisDTO getDemoCodeThesisForAnswer(Map<Integer, ConceptDto> conceptMap, List<ThesisDTO> theses) {
-        List<ThesisDTO> possibleTheses = theses.stream()
+
+    private List<ThesisDTO> getDemoCodeThesisForAnswer(Map<Integer, ConceptDto> conceptMap, List<ThesisDTO> theses) {
+        return theses.stream()
                 .filter(t -> DEMO_CODE.getValue().equals(t.getClazz()))
                 .filter(t -> Objects.isNull(t.getToThesisId()))
                 .filter(t -> conceptMap.containsKey(t.getConceptId()))
                 .collect(Collectors.toList());
-
-        return possibleTheses.get(new Random().nextInt(possibleTheses.size() - 1));
     }
 
     private List<Answer> getAnswers(ConceptDto question, Map<Integer, ConceptDto> conceptMap) {

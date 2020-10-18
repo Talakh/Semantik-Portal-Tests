@@ -7,12 +7,13 @@ import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Test;
+import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.tests.SPTest;
-import semantic.portal.tests.utils.TestUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static semantic.portal.tests.utils.TestUtils.filterPossibleConcepts;
 import static semantic.portal.tests.utils.TestUtils.getRandomConcept;
 
 @Slf4j
@@ -25,7 +26,7 @@ public class OneCorrectAnswerTestImpl implements SPTest {
     public Test create(List<ConceptDto> concepts,
                        List<ThesisDTO> theses,
                        List<String> thesesTypesForAnswer) {
-        Map<Integer, ConceptDto> possibleConceptsForTest = TestUtils.filterPossibleConcepts(thesesTypesForAnswer,concepts, theses);
+        Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(thesesTypesForAnswer,concepts, theses);
         ConceptDto question = getRandomConcept(possibleConceptsForTest);
 
         return Test.builder()
@@ -35,6 +36,19 @@ public class OneCorrectAnswerTestImpl implements SPTest {
                 .answers(getAnswers(question, theses, possibleConceptsForTest, thesesTypesForAnswer))
                 .type(TestTypeEnum.ONE_CORRECT_ANSWER)
                 .build();
+    }
+
+    @Override
+    public boolean isEnoughTheses(List<ConceptDto> concepts,
+                                  List<ThesisDTO> theses,
+                                  TestDifficultLevel level) {
+        if (level.getOneAnswerCount() <= 0) {
+            return true;
+        } else {
+            Map<Integer, ConceptDto> possibleConceptsForTest =
+                    filterPossibleConcepts(level.getOneAnswerThesisTypes(), concepts, theses);
+            return possibleConceptsForTest.size() >= 4;
+        }
     }
 
     private List<Answer> getAnswers(ConceptDto question,

@@ -5,13 +5,14 @@ import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Test;
+import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.api.ConceptApiService;
 import semantic.portal.tests.services.tests.SPTest;
-import semantic.portal.tests.utils.TestUtils;
 
 import java.util.*;
 
 import static semantic.portal.tests.enums.TestTypeEnum.ONE_CORRECT_ANSWER;
+import static semantic.portal.tests.utils.TestUtils.filterPossibleConcepts;
 import static semantic.portal.tests.utils.TestUtils.getRandomConcept;
 
 @Service
@@ -27,7 +28,8 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
     public Test create(List<ConceptDto> concepts,
                        List<ThesisDTO> theses,
                        List<String> thesesTypesForAnswer) {
-        Map<Integer, ConceptDto> possibleConceptsForTest = TestUtils.filterPossibleConcepts(thesesTypesForAnswer, concepts, theses);
+        Map<Integer, ConceptDto> possibleConceptsForTest =
+                filterPossibleConcepts(thesesTypesForAnswer, concepts, theses);
         ConceptDto question = getRandomConcept(possibleConceptsForTest);
         ThesisDTO thesisDTO = getConceptThesis(question.getId(), theses, thesesTypesForAnswer);
         return Test.builder()
@@ -37,6 +39,19 @@ public class OneCorrectAnswerByDefinitionTestImpl implements SPTest {
                 .answers(createAnswers(new ArrayList<>(possibleConceptsForTest.values()), thesisDTO))
                 .type(ONE_CORRECT_ANSWER)
                 .build();
+    }
+
+    @Override
+    public boolean isEnoughTheses(List<ConceptDto> concepts,
+                                  List<ThesisDTO> theses,
+                                  TestDifficultLevel level) {
+        if (level.getOneAnswerByDefinitionCount() <= 0) {
+            return true;
+        } else {
+            Map<Integer, ConceptDto> possibleConceptsForTest =
+                    filterPossibleConcepts(level.getOneAnswerByDefinitionThesisTypes(), concepts, theses);
+            return possibleConceptsForTest.size() >= 4;
+        }
     }
 
     private ThesisDTO getConceptThesis(int conceptId, List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {

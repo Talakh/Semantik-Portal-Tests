@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.DifficultLevelEnum;
+import semantic.portal.tests.exception.CantCreateTestException;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.tests.SPTest;
@@ -44,16 +45,27 @@ public class TestGeneratorImpl implements TestGenerator {
 
     @Override
     public List<Test> generate(List<ConceptDto> concepts, List<ThesisDTO> theses, DifficultLevelEnum difficult) {
-        List<Test> tests = new ArrayList<>();
+
         TestDifficultLevel difficultLevel = testDifficultLevelService.getTestDifficultLevel(difficult);
+        if (isThesesEnoughForTestBuild(concepts, theses, difficultLevel)) {
+            return generateTests(concepts, theses, difficultLevel);
+        } else {
+            throw new CantCreateTestException();
+        }
+    }
+
+    private List<Test> generateTests(List<ConceptDto> concepts, List<ThesisDTO> theses, TestDifficultLevel difficultLevel) {
+        List<Test> tests = new ArrayList<>();
         for (int i = 0; i < difficultLevel.getOneAnswerCount(); i++) {
             tests.add(oneCorrectAnswer.create(concepts, theses, difficultLevel.getOneAnswerThesisTypes()));
         }
         for (int i = 0; i < difficultLevel.getOneAnswerByDefinitionCount(); i++) {
-            tests.add(oneCorrectAnswerByDefinition.create(concepts, theses, difficultLevel.getOneAnswerByDefinitionThesisTypes()));
+            tests.add(oneCorrectAnswerByDefinition.create(concepts, theses,
+                    difficultLevel.getOneAnswerByDefinitionThesisTypes()));
         }
         for (int i = 0; i < difficultLevel.getDemoCodeCount(); i++) {
-            tests.add(oneCorrectAnswerForDemoCode.create(concepts, theses, difficultLevel.getDemoCodeThesisTypes()));
+            tests.add(oneCorrectAnswerForDemoCode.create(concepts, theses,
+                    difficultLevel.getDemoCodeThesisTypes()));
         }
         for (int i = 0; i < difficultLevel.getSeveralAnswerCount(); i++) {
             tests.add(severalCorrectAnswers.create(concepts, theses, difficultLevel.getSeveralAnswerThesisTypes()));
@@ -65,5 +77,16 @@ public class TestGeneratorImpl implements TestGenerator {
             tests.add(unorderedList.create(concepts, theses, difficultLevel.getUnorderedListThesisTypes()));
         }
         return tests;
+    }
+
+    private boolean isThesesEnoughForTestBuild(List<ConceptDto> concepts,
+                                               List<ThesisDTO> theses,
+                                               TestDifficultLevel level) {
+        return oneCorrectAnswer.isEnoughTheses(concepts, theses, level) &&
+                oneCorrectAnswerByDefinition.isEnoughTheses(concepts, theses, level) &&
+                severalCorrectAnswers.isEnoughTheses(concepts, theses, level) &&
+                match.isEnoughTheses(concepts, theses, level) &&
+                oneCorrectAnswerForDemoCode.isEnoughTheses(concepts, theses, level) &&
+                unorderedList.isEnoughTheses(concepts, theses, level);
     }
 }

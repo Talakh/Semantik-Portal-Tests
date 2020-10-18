@@ -1,0 +1,28 @@
+.title{
+  font-size: 35px;
+}
+
+
+.test-data{
+  .input-group{
+    margin-bottom: 10px;
+
+    .input-group-text{
+      width: 250px;
+      height: auto;
+      white-space: normal;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    input{
+      height: auto;
+      text-align: center;
+
+      &[type=number]{
+        max-width: 100px;
+      }
+    }
+  }
+}

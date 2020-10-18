@@ -6,8 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Repeat;
 import semantic.portal.tests.services.api.impl.BranchApiServiceImpl;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class SeveralCorrectAnswersTestImplTest {
     @Autowired
@@ -18,7 +16,7 @@ class SeveralCorrectAnswersTestImplTest {
     @Test
     @Repeat(value = 100)
     public void createTest(){
-        System.out.println(severalCorrectAnswersTest.create(
-                branchApiService.getConcepts("java"), branchApiService.getTheses("java")));
+//        System.out.println(severalCorrectAnswersTest.create(
+//                branchApiService.getConcepts("java"), branchApiService.getTheses("java")));
     }
 }

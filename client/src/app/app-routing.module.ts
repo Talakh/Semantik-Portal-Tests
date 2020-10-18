@@ -6,9 +6,11 @@ import {LoginComponent} from "./login/login.component";
 import {LogoutComponent} from "./logout/logout.component";
 import {UserComponent} from "./user/user.component";
 import {AddUserComponent} from "./add-user/add-user.component";
+import {DifficultLevelComponent} from "./difficult-level/difficult-level.component";
 
 const routes: Routes = [
   { path: 'tests', component: TestsComponent },
+  { path: 'difficult-level', component: DifficultLevelComponent },
   { path: '', component: UserComponent,canActivate:[AuthGaurdService] },
   { path: 'addUser', component: AddUserComponent,canActivate:[AuthGaurdService]},
   { path: 'login', component: LoginComponent },

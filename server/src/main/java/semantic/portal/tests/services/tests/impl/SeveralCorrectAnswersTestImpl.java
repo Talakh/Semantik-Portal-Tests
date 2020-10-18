@@ -1,32 +1,31 @@
 package semantic.portal.tests.services.tests.impl;
 
-import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Test;
+import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.tests.SPTest;
-import semantic.portal.tests.utils.TestUtils;
 
 import java.util.*;
 
 import static java.util.stream.Collectors.*;
-import static semantic.portal.tests.enums.ThesesClassEnum.ESSENCE;
+import static semantic.portal.tests.utils.TestUtils.getRandomConcept;
 
 @Service
 public class SeveralCorrectAnswersTestImpl implements SPTest {
     private static final String QUESTION_TEMPLATE = "Choose the statements applicable to the concept \"%s\"?";
     private static final int ANSWERS_COUNT = 4;
-    private static final List<String> thesesTypesForAnswer = Lists.newArrayList(ESSENCE.getValue());
 
     @Override
-    public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses) {
-        Map<Integer, List<ThesisDTO>> conceptsWithSeveralAnswers = filterConceptsWithSeveralAnswers(theses);
-        Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(concepts, conceptsWithSeveralAnswers.keySet());
-
-        ConceptDto question = TestUtils.getRandomConcept(possibleConceptsForTest);
+    public Test create(List<ConceptDto> concepts, List<ThesisDTO> theses, List<String> thesesTypesForAnswer) {
+        Map<Integer, List<ThesisDTO>> conceptsWithSeveralAnswers = filterConceptsWithSeveralAnswers(theses,
+                thesesTypesForAnswer);
+        Map<Integer, ConceptDto> possibleConceptsForTest = filterPossibleConcepts(concepts,
+                conceptsWithSeveralAnswers.keySet());
+        ConceptDto question = getRandomConcept(possibleConceptsForTest);
 
         return Test.builder()
                 .domainUrl(Collections.singleton(question.getDomain()))
@@ -37,7 +36,24 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
                 .build();
     }
 
-    private Map<Integer, List<ThesisDTO>> filterConceptsWithSeveralAnswers(List<ThesisDTO> theses) {
+    @Override
+    public boolean isEnoughTheses(List<ConceptDto> concepts,
+                                  List<ThesisDTO> theses,
+                                  TestDifficultLevel level) {
+        if (level.getSeveralAnswerCount() <= 0) {
+            return true;
+        } else {
+            Map<Integer, List<ThesisDTO>> conceptsWithSeveralAnswers =
+                    filterConceptsWithSeveralAnswers(theses, level.getSeveralAnswerThesisTypes());
+            return conceptsWithSeveralAnswers.values()
+                    .stream()
+                    .mapToLong(Collection::size)
+                    .sum() >= 4;
+        }
+    }
+
+    private Map<Integer, List<ThesisDTO>> filterConceptsWithSeveralAnswers(List<ThesisDTO> theses,
+                                                                           List<String> thesesTypesForAnswer) {
         return theses.stream()
                 .filter(t -> Objects.isNull(t.getToThesisId()))
                 .filter(t -> thesesTypesForAnswer.contains(t.getClazz()))
@@ -61,7 +77,8 @@ public class SeveralCorrectAnswersTestImpl implements SPTest {
         List<Answer> answers = new ArrayList<>();
         conceptsWithSeveralAnswers.get(question.getId())
                 .forEach(thesis -> answers.add(Answer.createAnswer(thesis.getThesis(), Boolean.TRUE)));
-        answers.addAll(generateWrongAnswers(question, conceptsWithSeveralAnswers, possibleConceptForTest, theses, ANSWERS_COUNT - answers.size()));
+        answers.addAll(generateWrongAnswers(question, conceptsWithSeveralAnswers, possibleConceptForTest, theses,
+                ANSWERS_COUNT - answers.size()));
         Collections.shuffle(answers);
         return answers;
     }

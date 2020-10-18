@@ -14,8 +14,8 @@ class OneCorrectAnswerForDemoCodeTestImplTest {
 
     @Test
     void name() {
-        semantic.portal.tests.model.Test test = demoCodeTest.create(branchApiService.getConcepts("java"),
-                branchApiService.getTheses("java"));
-        System.out.println(test);
+//        semantic.portal.tests.model.Test test = demoCodeTest.create(branchApiService.getConcepts("java"),
+//                branchApiService.getTheses("java"));
+//        System.out.println(test);
     }
 }

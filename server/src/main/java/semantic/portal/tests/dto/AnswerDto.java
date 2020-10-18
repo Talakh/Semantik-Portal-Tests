@@ -12,6 +12,4 @@ public class AnswerDto {
     UUID answerId;
     List<UUID> answerIds;
     Map<UUID, UUID> question2Answer;
-
-
 }

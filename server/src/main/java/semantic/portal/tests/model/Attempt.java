@@ -25,7 +25,10 @@ public class Attempt {
     @Column
     private String branch;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Column
+    private Boolean isPassed;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "attempt_id")
     private List<Test> tests;
 }

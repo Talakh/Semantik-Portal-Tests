@@ -1,10 +1,12 @@
 package semantic.portal.tests.services.tests.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.enums.TestTypeEnum;
 import semantic.portal.tests.model.Answer;
+import semantic.portal.tests.model.DomainUrl;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.tests.SPTest;

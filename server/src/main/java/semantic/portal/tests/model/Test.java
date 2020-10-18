@@ -27,10 +27,10 @@ public class Test {
     @Lob
     private String codeInQuestion;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> domainUrl;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> domainName;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

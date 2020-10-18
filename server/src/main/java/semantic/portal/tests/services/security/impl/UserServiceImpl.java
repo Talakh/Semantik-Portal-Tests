@@ -2,6 +2,8 @@ package semantic.portal.tests.services.security.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import semantic.portal.tests.model.JwtRequest;
@@ -65,6 +67,14 @@ public class UserServiceImpl implements UserService {
             Role roleUser = roleRepository.findByName(semanticLoginDto.getRole());
             register(user, roleUser);
         }
+    }
+
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        return userRepository.findByUsername(currentPrincipalName);
     }
 
     public User findByEmail(String username) {

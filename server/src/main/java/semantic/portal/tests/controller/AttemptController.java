@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import semantic.portal.tests.dto.CreateTestRequest;
 import semantic.portal.tests.dto.TestResultDto;
 import semantic.portal.tests.model.Attempt;
+import semantic.portal.tests.model.TestResult;
 import semantic.portal.tests.services.tests.TestManager;
 
 import java.util.UUID;

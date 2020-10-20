@@ -18,6 +18,8 @@ public interface UserService {
 
     void checkUser(JwtRequest authenticationRequest, SemanticLoginDto semanticLoginDto);
 
+    User getCurrentUser();
+
     User findByEmail(String email);
 
     User findById(UUID id);

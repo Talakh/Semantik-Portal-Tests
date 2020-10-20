@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import semantic.portal.tests.dto.AnswerCheckDto;
 import semantic.portal.tests.dto.AnswerDto;
 import semantic.portal.tests.dto.BranchChildDto;
+import semantic.portal.tests.model.TestResult;
+import semantic.portal.tests.services.security.UserService;
 import semantic.portal.tests.services.tests.CheckService;
 import semantic.portal.tests.services.tests.TestManager;
+import semantic.portal.tests.services.tests.TestResultService;
 
 import java.util.List;
 
@@ -18,10 +21,14 @@ import java.util.List;
 public class TestController {
     private final CheckService checkService;
     private final TestManager testManager;
+    private final UserService userService;
+    private final TestResultService testResultService;
 
-    public TestController(CheckService checkService, TestManager testManager) {
+    public TestController(CheckService checkService, TestManager testManager, UserService userService, TestResultService testResultService) {
         this.checkService = checkService;
         this.testManager = testManager;
+        this.userService = userService;
+        this.testResultService = testResultService;
     }
 
     @PutMapping("/check")
@@ -36,4 +43,10 @@ public class TestController {
     public ResponseEntity<List<BranchChildDto>> getBranches() {
         return ResponseEntity.ok(testManager.getAllBranches());
     }
+
+    @GetMapping("/currentUserAttempts")
+    public List<TestResult> getAttemptByCurrentUser() {
+        return testResultService.getTestResultByUserId(userService.getCurrentUser().getId());
+    }
+
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import semantic.portal.tests.dto.ConceptDto;
 import semantic.portal.tests.dto.ThesisDTO;
 import semantic.portal.tests.model.Answer;
+import semantic.portal.tests.model.DomainUrl;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.model.TestDifficultLevel;
 import semantic.portal.tests.services.api.ConceptApiService;

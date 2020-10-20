@@ -10,6 +10,7 @@ import semantic.portal.tests.model.Answer;
 import semantic.portal.tests.model.Question;
 import semantic.portal.tests.model.Test;
 import semantic.portal.tests.repository.TestRepository;
+import semantic.portal.tests.services.security.UserService;
 import semantic.portal.tests.services.tests.CheckService;
 
 import javax.persistence.EntityNotFoundException;
@@ -22,9 +23,11 @@ import java.util.stream.Collectors;
 @Service
 public class CheckServiceImpl implements CheckService {
     private final TestRepository testRepository;
+    private final UserService userService;
 
-    public CheckServiceImpl(TestRepository testRepository) {
+    public CheckServiceImpl(TestRepository testRepository, UserService userService) {
         this.testRepository = testRepository;
+        this.userService = userService;
     }
 
     @Override

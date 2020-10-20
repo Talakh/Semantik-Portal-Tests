@@ -3,17 +3,15 @@ package semantic.portal.tests.services.tests.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import semantic.portal.tests.dto.BranchChildDto;
-import semantic.portal.tests.dto.ConceptDto;
-import semantic.portal.tests.dto.TestResultDto;
-import semantic.portal.tests.dto.ThesisDTO;
+import semantic.portal.tests.dto.*;
 import semantic.portal.tests.enums.DifficultLevelEnum;
 import semantic.portal.tests.enums.GradeEnum;
-import semantic.portal.tests.model.Attempt;
-import semantic.portal.tests.model.Test;
+import semantic.portal.tests.model.*;
 import semantic.portal.tests.repository.AttemptRepository;
 import semantic.portal.tests.repository.TestRepository;
+import semantic.portal.tests.repository.TestResultRepository;
 import semantic.portal.tests.services.api.BranchApiService;
+import semantic.portal.tests.services.security.UserService;
 import semantic.portal.tests.services.tests.TestGenerator;
 import semantic.portal.tests.services.tests.TestManager;
 
@@ -28,15 +26,18 @@ public class TestManagerImpl implements TestManager {
     private final BranchApiService branchApiService;
     private final TestGenerator testGenerator;
     private final AttemptRepository attemptRepository;
+    private final TestResultRepository testResultRepository;
+    private final UserService userService;
     private final TestRepository testRepository;
 
-
     public TestManagerImpl(BranchApiService branchApiService,
-                           TestGenerator testGenerator,
-                           AttemptRepository attemptRepository, TestRepository testRepository) {
+                           TestGenerator testGenerator
+            , AttemptRepository attemptRepository, TestResultRepository testResultRepository, UserService userService, TestRepository testRepository) {
         this.branchApiService = branchApiService;
         this.testGenerator = testGenerator;
         this.attemptRepository = attemptRepository;
+        this.testResultRepository = testResultRepository;
+        this.userService = userService;
         this.testRepository = testRepository;
     }
 
@@ -60,15 +61,36 @@ public class TestManagerImpl implements TestManager {
         long correctAnswersCount = tests.stream().filter(Test::getAnswerResult).count();
         long percent = Math.round((double) correctAnswersCount / (double) questionsCount * 100);
         GradeEnum grade = GradeEnum.getByValue(percent);
+        return toTestResultDto(getTestResult(tests, questionsCount, correctAnswersCount, percent, grade));
+    }
 
-        TestResultDto resultDto = new TestResultDto();
-        resultDto.setQuestionsCount(questionsCount);
-        resultDto.setCorrectAnswersCount(correctAnswersCount);
-        resultDto.setPercent(percent);
-        resultDto.setGrade(grade.name());
-        resultDto.setPassed(grade.isPassed());
-        resultDto.setTopicsToRepeat(getTopicToRepeat(tests));
-        return resultDto;
+    @Transactional
+    public TestResult getTestResult(List<Test> tests, long questionsCount, long correctAnswersCount, long percent, GradeEnum grade) {
+        TestResult result = new TestResult();
+        result.setUserId(userService.getCurrentUser().getId());
+        result.setQuestionsCount(questionsCount);
+        result.setCorrectAnswersCount(correctAnswersCount);
+        result.setPercent(percent);
+        result.setGrade(grade.name());
+        result.setPassed(grade.isPassed());
+        result.setTopicsToRepeat(getTopicToRepeat(tests));
+        testResultRepository.save(result);
+        return result;
+    }
+
+    private TestResultDto toTestResultDto(TestResult testResult) {
+        return TestResultDto.builder()
+                .questionsCount(testResult.getQuestionsCount())
+                .userId(testResult.getUserId())
+                .correctAnswersCount(testResult.getCorrectAnswersCount())
+                .percent(testResult.getPercent())
+                .grade(testResult.getGrade())
+                .passed(testResult.isPassed())
+                .topicsToRepeat(testResult.getTopicsToRepeat().stream().map(topicToRepeat -> TopicToRepeatDto.builder()
+                        .domainName(topicToRepeat.getDomainName().stream().map(DomainName::getDomainName).collect(Collectors.toSet()))
+                        .domainUrl(topicToRepeat.getDomainUrl().stream().map(DomainUrl::getDomainUrl).collect(Collectors.toSet()))
+                        .build()).collect(Collectors.toList()))
+                .build();
     }
 
     @Override
@@ -78,12 +100,17 @@ public class TestManagerImpl implements TestManager {
                 .collect(Collectors.toList());
     }
 
-    private List<TestResultDto.TopicToRepeat> getTopicToRepeat(List<Test> tests) {
+    @Transactional
+    List<TopicToRepeat> getTopicToRepeat(List<Test> tests) {
         return tests.stream()
                 .filter(test -> !test.getAnswerResult())
-                .map(test -> TestResultDto.TopicToRepeat.builder()
-                        .domainUrl(test.getDomainUrl())
-                        .domainName(test.getDomainName())
+                .map(test -> TopicToRepeat.builder()
+                        .domainUrl(test.getDomainUrl().stream()
+                                .map(questionUrl -> DomainUrl.builder().domainUrl(questionUrl).build())
+                                .collect(Collectors.toSet()))
+                        .domainName(test.getDomainName().stream()
+                                .map(questionUrl -> DomainName.builder().domainName(questionUrl).build())
+                                .collect(Collectors.toSet()))
                         .build())
                 .distinct()
                 .collect(Collectors.toList());

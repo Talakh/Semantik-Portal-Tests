@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import semantic.portal.tests.model.User;
 import semantic.portal.tests.dto.UserDto;
+import semantic.portal.tests.model.TestResult;
+import semantic.portal.tests.model.User;
 import semantic.portal.tests.services.security.UserService;
 
+import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/api/v1/users/")
 public class UserRestController {
@@ -31,7 +34,5 @@ public class UserRestController {
         UserDto result = UserDto.fromUser(user);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
-
 
 }

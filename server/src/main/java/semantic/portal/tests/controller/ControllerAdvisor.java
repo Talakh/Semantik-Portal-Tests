@@ -16,9 +16,9 @@ import java.util.Map;
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CantCreateTestException.class)
-    public ResponseEntity<Object> handleCantCreateTestException(CantCreateTestException e) {
+    public ResponseEntity<Object> handleCantCreateTestException() {
         Map<String, Object> body = new HashMap<>();
-        body.put("message", "Don't enough theses for creating test");
+        body.put("message", "Need more theses for creating test");
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }

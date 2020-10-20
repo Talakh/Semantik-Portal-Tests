@@ -13,7 +13,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">One answer questions</span>
         </div>
-        <input type="number" class="form-control" [(ngModel)]="level.oneAnswerCount">
+        <input type="number" min="0" class="form-control" [(ngModel)]="level.oneAnswerCount">
         <input type="text" class="form-control" [(ngModel)]="level.oneAnswerThesisTypes">
       </div>
     </div>
@@ -22,7 +22,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">One answer by definition questions</span>
         </div>
-        <input type="number" class="form-control" [(ngModel)]="level.oneAnswerByDefinitionCount">
+        <input type="number" min="0" class="form-control" [(ngModel)]="level.oneAnswerByDefinitionCount">
         <input type="text" class="form-control" [(ngModel)]="level.oneAnswerByDefinitionThesisTypes">
       </div>
     </div>
@@ -31,7 +31,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Several answer questions</span>
         </div>
-        <input type="number" class="form-control" [(ngModel)]="level.severalAnswerCount">
+        <input type="number" min="0" class="form-control" [(ngModel)]="level.severalAnswerCount">
         <input type="text" class="form-control" [(ngModel)]="level.severalAnswerThesisTypes">
       </div>
     </div>
@@ -40,7 +40,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Demo code questions</span>
         </div>
-        <input type="number" class="form-control" [(ngModel)]="level.demoCodeCount">
+        <input type="number" min="0" class="form-control" [(ngModel)]="level.demoCodeCount">
         <input type="text" class="form-control" [(ngModel)]="level.demoCodeThesisTypes">
       </div>
     </div>
@@ -49,7 +49,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Match questions</span>
         </div>
-        <input type="number" class="form-control" [(ngModel)]="level.matchCount">
+        <input type="number" min="0" class="form-control" [(ngModel)]="level.matchCount">
         <input type="text" class="form-control" [(ngModel)]="level.matchThesisTypes">
       </div>
     </div>
@@ -58,11 +58,12 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Unordered list questions</span>
         </div>
-        <input type="number" class="form-control" [(ngModel)]="level.unorderedListCount">
+        <input type="number" min="0" class="form-control" [(ngModel)]="level.unorderedListCount">
         <input type="text" class="form-control" [(ngModel)]="level.unorderedListThesisTypes">
       </div>
     </div>
   </div>
+  <button mat-raised-button class="btn-custom mt-4" color="primary" (click)="updateDifficultLevels()">Update</button>
 </div>
 
 <h1>TheseClasses</h1>

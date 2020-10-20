@@ -8,10 +8,7 @@ import semantic.portal.tests.repository.TestDifficultLevelRepository;
 import semantic.portal.tests.services.tests.TestDifficultLevelService;
 
 import javax.annotation.PostConstruct;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static semantic.portal.tests.enums.ThesesClassEnum.*;
@@ -43,16 +40,21 @@ public class TestDifficultLevelServiceImpl implements TestDifficultLevelService 
         return levelsMap.get(difficultLevelEnum);
     }
 
+    // TODO: 19.10.2020
     @Override
-    public TestDifficultLevel updateTestDifficult(TestDifficultLevel difficultLevel) {
-        TestDifficultLevel level = testDifficultLevelRepository.save(difficultLevel);
-        levelsMap.put(difficultLevel.getTestDifficultId(), level);
-        return level;
+    public Collection<TestDifficultLevel> updateTestDifficult(List<TestDifficultLevel> difficultLevel) {
+        for (TestDifficultLevel l : difficultLevel) {
+            TestDifficultLevel level = testDifficultLevelRepository.save(l);
+            levelsMap.put(level.getTestDifficultId(), level);
+        }
+        return levelsMap.values();
     }
 
     @Override
     public Collection<TestDifficultLevel> getCurrentLevels() {
-        return levelsMap.values();
+        return levelsMap.values().stream()
+                .sorted(Comparator.comparing(TestDifficultLevel::getTestDifficultId))
+                .collect(Collectors.toList());
     }
 
     private List<TestDifficultLevel> getDefaultLevels() {

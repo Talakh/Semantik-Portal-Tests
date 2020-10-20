@@ -28,7 +28,7 @@ public class TestDifficultLevelController {
     }
 
     @PutMapping
-    public ResponseEntity<TestDifficultLevel> updateDifficultLevel(@RequestBody TestDifficultLevel difficultLevel) {
+    public ResponseEntity<Collection<TestDifficultLevel>> updateDifficultLevel(@RequestBody List<TestDifficultLevel> difficultLevel) {
         return ResponseEntity.ok(testDifficultLevelService.updateTestDifficult(difficultLevel));
     }
 

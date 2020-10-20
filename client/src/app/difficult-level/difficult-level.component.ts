@@ -23,4 +23,7 @@ export class DifficultLevelComponent implements OnInit {
 
   }
 
+  updateDifficultLevels() {
+    this.difficultLevelService.updateDifficultLevel(this.levels);
+  }
 }

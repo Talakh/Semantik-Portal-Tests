@@ -17,8 +17,9 @@ export class DifficultLevelService {
     return this.httpClientService.get(url);
   }
 
-  updateDifficultLevel(entity: any): Observable<DifficultLevel> {
-    return this.httpClientService.put(url, entity);
+  updateDifficultLevel(entity: any) {
+    this.httpClientService.put(url, entity)
+      .subscribe(res => console.log(res));
   }
 
   getTheseClasses(): Observable<ThesesClass[]> {

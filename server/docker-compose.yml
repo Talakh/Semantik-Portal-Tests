@@ -1,6 +1,13 @@
 version: '3.1'
 services:
-  app:
+  client:
+    build: ./../client
+    ports:
+      - "4200:80"
+    container_name: semantic-test-front
+    depends_on:
+      - server
+  server:
     container_name: semantic-tests
     image: semantic-tests
     build: ./
